@@ -40,10 +40,16 @@
       padding: 0;
     }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body {
       font-family: 'Cormorant Garamond', Georgia, serif;
       color: var(--text-blue);
       min-height: 100vh;
+      min-height: 100dvh;
       background-color: #2c1810;
       background-image:
         linear-gradient(rgba(245, 240, 230, 0.22) 0%, rgba(232, 223, 208, 0.18) 45%, transparent 75%),
@@ -58,7 +64,9 @@
     .container {
       max-width: 720px;
       margin: 0 auto;
-      padding: 2rem 1.5rem 3rem;
+      padding: 2rem max(1.5rem, env(safe-area-inset-right)) 3rem max(1.5rem, env(safe-area-inset-left));
+      padding-top: max(2rem, env(safe-area-inset-top));
+      padding-bottom: max(3rem, env(safe-area-inset-bottom));
     }
 
     header {
@@ -449,6 +457,133 @@
       color: var(--text-blue-soft);
       opacity: 0.9;
     }
+
+    /* Fixed backgrounds often break or stutter on mobile; scroll behaves reliably */
+    @media (max-width: 900px) {
+      body {
+        background-attachment: scroll, scroll;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        padding-top: max(1rem, env(safe-area-inset-top));
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      }
+
+      header {
+        padding: 1rem 0.85rem;
+        margin-bottom: 1.5rem;
+      }
+
+      h1.event-title-block {
+        font-size: clamp(1rem, 4.5vw + 0.35rem, 1.75rem);
+        letter-spacing: 0.05em;
+      }
+
+      .subtitle {
+        font-size: 0.88rem;
+      }
+
+      /* Stack: seq + body on row 1; time (and optional thumb) below — avoids crushed columns */
+      .event-item {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto;
+        gap: 0.65rem 0.85rem;
+        padding: 1rem 0.9rem;
+        margin-bottom: 0.85rem;
+      }
+
+      .event-item .seq {
+        grid-column: 1;
+        grid-row: 1;
+        align-self: start;
+      }
+
+      .event-item .body {
+        grid-column: 2;
+        grid-row: 1;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .event-item .time-block {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        text-align: left;
+        min-width: 0;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(201, 162, 39, 0.35);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.35rem 1rem;
+      }
+
+      .event-item.chai-break .item-side-thumb-chai,
+      .event-item.snacks-showcase .item-side-thumb-snacks {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: center;
+        width: min(7.5rem, 28vw);
+        height: min(7.5rem, 28vw);
+        margin: 0.15rem 0 0.35rem;
+      }
+
+      .event-item.chai-break .time-block,
+      .event-item.snacks-showcase .time-block {
+        grid-row: 3;
+        border-top: none;
+        padding-top: 0.25rem;
+      }
+
+      .event-item.chai-break,
+      .event-item.snacks-showcase {
+        grid-template-rows: auto auto auto;
+      }
+
+      .event-item.chai-break p.description,
+      .event-item.snacks-showcase p.description {
+        min-height: 0;
+      }
+
+      .event-item.dinner-showcase {
+        min-height: clamp(180px, 38vh, 360px);
+        padding: 1rem 0.9rem;
+      }
+
+      .event-item.dinner-showcase .dinner-bg {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+      }
+
+      .event-item.dinner-showcase .description {
+        font-size: clamp(1rem, 4.2vw + 0.4rem, 1.5rem);
+      }
+
+      .event-item .description-large,
+      .event-item .description-largeBold {
+        font-size: clamp(1.15rem, 3.5vw + 0.5rem, 1.45rem);
+      }
+
+      .time-block .start-time {
+        font-size: 0.95rem;
+      }
+
+      .time-block .duration {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .seq {
+        min-width: 2.15rem;
+        height: 2.15rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -570,23 +705,6 @@
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       } catch (e) { /* ignore quota */ }
-    }
-
-    /** Raw JSON text of events.json last applied (detect edits on disk). */
-    let lastEventsJsonText = null;
-
-    async function syncEventsFromFile() {
-      try {
-        const res = await fetch('events.json', { cache: 'no-store' });
-        if (!res.ok) return;
-        const text = await res.text();
-        if (text === lastEventsJsonText) return;
-        const data = JSON.parse(text);
-        if (!data.items || !Array.isArray(data.items)) return;
-        lastEventsJsonText = text;
-        saveData(data);
-        renderProgramme(data);
-      } catch (e) { /* invalid JSON or network */ }
     }
 
     function isChaiBreakItem(item) {
@@ -713,7 +831,6 @@
           const text = await res.text();
           const parsed = JSON.parse(text);
           if (parsed && parsed.items && parsed.items.length) {
-            lastEventsJsonText = text;
             saveData(parsed);
             data = parsed;
           }
@@ -723,7 +840,6 @@
         data = getData();
       }
       renderProgramme(data);
-      setInterval(syncEventsFromFile, 2000);
       setInterval(refresh, 15000);
       window.addEventListener('storage', function () {
         renderProgramme(getData());

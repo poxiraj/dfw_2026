@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Admin — Cultural Event Programme</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,10 +26,16 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
     body {
       font-family: 'Cormorant Garamond', Georgia, serif;
       color: var(--text-blue);
       min-height: 100vh;
+      min-height: 100dvh;
       background-color: #2c1810;
       background-image:
         linear-gradient(rgba(245, 240, 230, 0.22) 0%, rgba(232, 223, 208, 0.18) 45%, transparent 75%),
@@ -43,7 +49,9 @@
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 2rem 1.5rem 3rem;
+      padding: 2rem max(1.5rem, env(safe-area-inset-right)) 3rem max(1.5rem, env(safe-area-inset-left));
+      padding-top: max(2rem, env(safe-area-inset-top));
+      padding-bottom: max(3rem, env(safe-area-inset-bottom));
     }
 
     header {
@@ -204,6 +212,103 @@
       pointer-events: none;
     }
     .saved-toast.show { opacity: 1; }
+
+    @media (max-width: 900px) {
+      body {
+        background-attachment: scroll, scroll;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding-left: max(0.75rem, env(safe-area-inset-left));
+        padding-right: max(0.75rem, env(safe-area-inset-right));
+        padding-top: max(1rem, env(safe-area-inset-top));
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      }
+
+      header {
+        padding: 1rem 0.85rem;
+        margin-bottom: 1.25rem;
+      }
+
+      h1 {
+        font-size: clamp(1.1rem, 4vw + 0.4rem, 1.5rem);
+        letter-spacing: 0.05em;
+      }
+
+      .load-section {
+        padding: 1rem 0.85rem;
+      }
+
+      .load-section label {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.65rem 1rem;
+      }
+
+      .admin-item {
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 0.5rem 0.65rem;
+        padding: 0.85rem 0.75rem;
+        align-items: center;
+      }
+
+      .admin-item .seq {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .admin-item .reorder-btns {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        flex-direction: row;
+        gap: 4px;
+      }
+
+      .reorder-btns button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 0.9rem;
+      }
+
+      .admin-item .desc-wrap {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+
+      .admin-item .time-cell {
+        grid-column: 1;
+        grid-row: 3;
+        text-align: left;
+        justify-self: start;
+      }
+
+      .admin-item .btn-now {
+        grid-column: 2;
+        grid-row: 3;
+        justify-self: end;
+        align-self: center;
+        padding: 0.5rem 0.65rem;
+        min-height: 44px;
+      }
+
+      .saved-toast {
+        left: max(0.75rem, env(safe-area-inset-left));
+        right: max(0.75rem, env(safe-area-inset-right));
+        width: auto;
+        transform: none;
+        text-align: center;
+        bottom: max(1rem, env(safe-area-inset-bottom));
+      }
+    }
   </style>
 </head>
 <body>
