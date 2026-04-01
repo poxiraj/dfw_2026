@@ -1,6 +1,4 @@
 {
-  "eventName1": "ৰঙালী বিহু ২০২৬, ডিএফডব্লিউ",
-  "eventName2": "Rongali Bihu 2026, DFW",
   "items": [
     {
       "sequenceId": 0,
@@ -94,7 +92,7 @@
     },
     {
       "sequenceId": 10,
-      "description1": "মিছিৰ গীত",
+      "description1": "মিছি গীত",
       "description2": "Mishi (Ishita) Song",
       "durationMinutes": 5,
       "expectedStartTime": "17:37:30",
@@ -166,8 +164,8 @@
     },
     {
       "sequenceId": 18,
-      "description1": "অসমীয়া আধুনিক নৃত্য",
-      "description2": "Assamese Modern dance (Anita's group)",
+      "description1": "ডনা, ৰায়ান আৰু আশিৰ নৃত্য",
+      "description2": "Dona, Ryan and Aashi dance",
       "durationMinutes": 5,
       "expectedStartTime": "18:51:30",
       "prepTime": null,
@@ -175,8 +173,8 @@
     },
     {
       "sequenceId": 19,
-      "description1": "ভাষণ",
-      "description2": "Speech ",
+      "description1": "একক গীত – আনিশা",
+      "description2": "Solo song Anisha",
       "durationMinutes": 5,
       "expectedStartTime": "18:58:30",
       "prepTime": 2,
@@ -184,26 +182,26 @@
     },
     {
       "sequenceId": 20,
-      "description1": "একক গীত ",
-      "description2": "Pankaj song",
+      "description1": "কথক নৃত্য",
+      "description2": "kathak dance by Aarna",
       "durationMinutes": 5,
-      "expectedStartTime": "19:06:30",
-      "prepTime": 3,
-      "artist(s)": null
-    },
-    {
-      "sequenceId": 21,
-      "description1": "কলিজা ঢিপিশ ঢিপিশ",
-      "description2": "Kalija dhipish dhipish",
-      "durationMinutes": 5,
-      "expectedStartTime": "19:13:30",
+      "expectedStartTime": "19:05:30",
       "prepTime": 2,
       "artist(s)": null
     },
     {
+      "sequenceId": 21,
+      "description1": "অসমীয়া আধুনিক নৃত্য",
+      "description2": "Assamese Modern dance (Anita's group)",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:13:30",
+      "prepTime": 3,
+      "artist(s)": null
+    },
+    {
       "sequenceId": 22,
-      "description1": "একক গীত – আনিশা",
-      "description2": "Solo song Anisha",
+      "description1": "একক গীত – অগস্ত্য",
+      "description2": "Solo song Agastya",
       "durationMinutes": 5,
       "expectedStartTime": "19:20:30",
       "prepTime": 2,
@@ -211,8 +209,8 @@
     },
     {
       "sequenceId": 23,
-      "description1": "ডনা আৰু আশিৰ নৃত্য",
-      "description2": "Dona and Aashi dance",
+      "description1": "কলিজা ঢিপিশ ঢিপিশ",
+      "description2": "Kalija dhipish dhipish",
       "durationMinutes": 5,
       "expectedStartTime": "19:28:30",
       "prepTime": 3,
@@ -220,8 +218,8 @@
     },
     {
       "sequenceId": 24,
-      "description1": "একক গীত – অগস্ত্য",
-      "description2": "Solo song Agastya",
+      "description1": "একক গীত ",
+      "description2": "Pankaj song",
       "durationMinutes": 5,
       "expectedStartTime": "19:35:30",
       "prepTime": 2,
@@ -229,8 +227,8 @@
     },
     {
       "sequenceId": 25,
-      "description1": "কথক নৃত্য",
-      "description2": "kathak dance by Aarna",
+      "description1": "ভাষণ",
+      "description2": "Speech ",
       "durationMinutes": 5,
       "expectedStartTime": "19:42:30",
       "prepTime": 2,
@@ -380,5 +378,7 @@
       "prepTime": null,
       "artist(s)": null
     }
-  ]
+  ],
+  "eventName1": "ৰঙালী বিহু ২০২৬, ডিএফডব্লিউ",
+  "eventName2": "Rongali Bihu 2026, DFW"
 }
