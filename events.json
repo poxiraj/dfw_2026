@@ -1,0 +1,384 @@
+{
+  "eventName1": "ৰঙালী বিহু ২০২৬, ডিএফডব্লিউ",
+  "eventName2": "Rongali Bihu 2026, DFW",
+  "items": [
+    {
+      "sequenceId": 0,
+      "description1": "জলপান , আলোকচিত্ৰ ",
+      "description2": "Snacks + Photo ",
+      "durationMinutes": 60,
+      "expectedStartTime": "15:30",
+      "prepTime": null,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 1,
+      "description1": "উদ্বোধনী ভাষণ",
+      "description2": "Opening speech",
+      "durationMinutes": 3,
+      "expectedStartTime": "16:30",
+      "prepTime": 0,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 2,
+      "description1": "বয়স্কসকলৰ সমবেত সংগীত",
+      "description2": "Adult Chorus",
+      "durationMinutes": 5,
+      "expectedStartTime": "16:35",
+      "prepTime": 2,
+      "artist(s)": "Abhijit, Manoj"
+    },
+    {
+      "sequenceId": 3,
+      "description1": "শিশুসকলৰ সমবেত সংগীত",
+      "description2": "Kids Chorus",
+      "durationMinutes": 5,
+      "expectedStartTime": "16:42",
+      "prepTime": 2,
+      "artist(s)": "Agastya, "
+    },
+    {
+      "sequenceId": 4,
+      "description1": "সত্ৰীয়া নৃত্য",
+      "description2": "Xatriya",
+      "durationMinutes": 5.5,
+      "expectedStartTime": "16:49",
+      "prepTime": 2,
+      "artist(s)": "Nerina & team"
+    },
+    {
+      "sequenceId": 5,
+      "description1": "লিটল গ্ৰুভাৰছ",
+      "description2": "Little Groovers",
+      "durationMinutes": 5,
+      "expectedStartTime": "16:56:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 6,
+      "description1": "সৰু ছোৱালীৰ নৃত্য",
+      "description2": "Little girl's dance (8-10 yrs)",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:03:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 7,
+      "description1": "পোছাক প্ৰদৰ্শনী",
+      "description2": "Fashion Show",
+      "durationMinutes": 10,
+      "expectedStartTime": "17:12:30",
+      "prepTime": 4,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 8,
+      "description1": "জীয়ৰীসকলৰ বিহু",
+      "description2": "Kalpita daughter Bihu",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:24:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 9,
+      "description1": "শিশু নৃত্য",
+      "description2": "Kids dance (6-9 age group)",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:31:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 10,
+      "description1": "মিছিৰ গীত",
+      "description2": "Mishi (Ishita) Song",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:37:30",
+      "prepTime": 1,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 11,
+      "description1": "কে-পপ গোল্ডেন",
+      "description2": "Kay pop golden (Pahi/Navin)",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:43:30",
+      "prepTime": 1,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 12,
+      "description1": "সাত ভগিনীৰ নৃত্য",
+      "description2": "Seven sisters dance",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:50:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 13,
+      "description1": "একক গীত –",
+      "description2": "Solo song Jinisha",
+      "durationMinutes": 5,
+      "expectedStartTime": "17:56:30",
+      "prepTime": 1,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 14,
+      "description1": "লুইতৰ লুইটী",
+      "description2": "Luitor Luiti (Mother Daughter Dance)",
+      "durationMinutes": 5,
+      "expectedStartTime": "18:03:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 15,
+      "description1": "মহিলাৰ বিহু",
+      "description2": "Ladies Bihu",
+      "durationMinutes": 5,
+      "expectedStartTime": "18:11:30",
+      "prepTime": 3,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 16,
+      "description1": "পিয়ানো",
+      "description2": "Piano",
+      "durationMinutes": 3,
+      "expectedStartTime": "18:18:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 17,
+      "description1": "চাহ-পানীৰ অৱকাশ",
+      "description2": "BREAK (Water/Tea) ",
+      "durationMinutes": 30,
+      "expectedStartTime": "18:21:30",
+      "prepTime": null,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 18,
+      "description1": "অসমীয়া আধুনিক নৃত্য",
+      "description2": "Assamese Modern dance (Anita's group)",
+      "durationMinutes": 5,
+      "expectedStartTime": "18:51:30",
+      "prepTime": null,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 19,
+      "description1": "ভাষণ",
+      "description2": "Speech ",
+      "durationMinutes": 5,
+      "expectedStartTime": "18:58:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 20,
+      "description1": "একক গীত ",
+      "description2": "Pankaj song",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:06:30",
+      "prepTime": 3,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 21,
+      "description1": "কলিজা ঢিপিশ ঢিপিশ",
+      "description2": "Kalija dhipish dhipish",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:13:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 22,
+      "description1": "একক গীত – আনিশা",
+      "description2": "Solo song Anisha",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:20:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 23,
+      "description1": "ডনা আৰু আশিৰ নৃত্য",
+      "description2": "Dona and Aashi dance",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:28:30",
+      "prepTime": 3,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 24,
+      "description1": "একক গীত – অগস্ত্য",
+      "description2": "Solo song Agastya",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:35:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 25,
+      "description1": "কথক নৃত্য",
+      "description2": "kathak dance by Aarna",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:42:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 26,
+      "description1": "সংগীতানুষ্ঠান",
+      "description2": "XYZ musical",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:51:30",
+      "prepTime": 4,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 27,
+      "description1": "লোক নৃত্য",
+      "description2": "Folk dance",
+      "durationMinutes": 5,
+      "expectedStartTime": "19:59:30",
+      "prepTime": 3,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 28,
+      "description1": "একক গীত – কৰবী শৰ্মা",
+      "description2": "Solo song Karabi Sarma",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:06:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 29,
+      "description1": "ৰাহুল আৰু অঞ্চিতা",
+      "description2": "Rahul and Anchita",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:13:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 30,
+      "description1": "ৰিশিতাৰ নৃত্য",
+      "description2": "Rishita dance",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:20:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 31,
+      "description1": "নাচলে স্কোৱাড",
+      "description2": "Nachley squad",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:27:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 32,
+      "description1": "একক গীত – দীয়া",
+      "description2": "Solo song Diya",
+      "durationMinutes": 4,
+      "expectedStartTime": "20:34:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 33,
+      "description1": "সংগীতানুষ্ঠান",
+      "description2": "ABC musical",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:41:30",
+      "prepTime": 3,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 34,
+      "description1": "একক গীত – নিতু প্ৰধানী",
+      "description2": "solo song Nitu Pradhani",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:48:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 35,
+      "description1": "গোট অৰ্কেষ্ট্ৰা – মৃন্ময়",
+      "description2": "group orchestra Mrinmoy",
+      "durationMinutes": 5,
+      "expectedStartTime": "20:57:30",
+      "prepTime": 4,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 36,
+      "description1": "কবিতা – অঞ্জনা বৰা",
+      "description2": "Poem anjana bora",
+      "durationMinutes": 5,
+      "expectedStartTime": "21:04:30",
+      "prepTime": 2,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 37,
+      "description1": "জুবিন গাৰ্গ স্পেচিয়েল",
+      "description2": "Zubeen Garg Special",
+      "durationMinutes": 10,
+      "expectedStartTime": "21:13:30",
+      "prepTime": 4,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 38,
+      "description1": "ঢিনিকি ঢিন দাও",
+      "description2": "Dhiniki Dhin dau",
+      "durationMinutes": 10,
+      "expectedStartTime": "21:27:30",
+      "prepTime": 4,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 39,
+      "description1": "নিশাৰ আহাৰ",
+      "description2": "Dinner",
+      "durationMinutes": 60,
+      "expectedStartTime": null,
+      "prepTime": null,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 40,
+      "description1": "মুকলি বিহু",
+      "description2": "Mukoli Bihu ",
+      "durationMinutes": null,
+      "expectedStartTime": "22:30",
+      "prepTime": null,
+      "artist(s)": null
+    },
+    {
+      "sequenceId": 41,
+      "description1": "অনুষ্ঠান সামৰণি ",
+      "description2": "Closing",
+      "durationMinutes": null,
+      "expectedStartTime": "23:15",
+      "prepTime": null,
+      "artist(s)": null
+    }
+  ]
+}

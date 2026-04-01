@@ -1,0 +1,10 @@
+{
+  "name": "Rongali Bihu — Programme",
+  "short_name": "Programme",
+  "description": "Event lineup and schedule",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f5f0e6",
+  "theme_color": "#4a1c22",
+  "orientation": "any"
+}
