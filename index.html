@@ -43,13 +43,17 @@
     html {
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      height: 100%;
     }
 
     body {
       font-family: 'Cormorant Garamond', Georgia, serif;
       color: var(--text-blue);
-      min-height: 100vh;
-      min-height: 100dvh;
+      height: 100%;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
       background-color: #2c1810;
       background-image:
         linear-gradient(rgba(245, 240, 230, 0.22) 0%, rgba(232, 223, 208, 0.18) 45%, transparent 75%),
@@ -62,17 +66,21 @@
     }
 
     .container {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
       max-width: 720px;
+      width: 100%;
       margin: 0 auto;
-      padding: 2rem max(1.5rem, env(safe-area-inset-right)) 3rem max(1.5rem, env(safe-area-inset-left));
-      padding-top: max(2rem, env(safe-area-inset-top));
-      padding-bottom: max(3rem, env(safe-area-inset-bottom));
+      padding: max(1.25rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-right)) max(0.5rem, env(safe-area-inset-bottom)) max(1.5rem, env(safe-area-inset-left));
+      gap: 0.5rem;
     }
 
     header {
+      flex-shrink: 0;
       text-align: center;
-      margin-bottom: 2.5rem;
-      padding: 1.5rem;
+      padding: 1rem 1.25rem;
       border: 2px solid var(--border-gold);
       background: linear-gradient(135deg, var(--parchment) 0%, rgba(232, 223, 208, 0.9) 100%);
       box-shadow: 0 4px 20px var(--shadow-warm);
@@ -83,13 +91,30 @@
       font-weight: 700;
       font-size: 1.75rem;
       color: var(--text-blue-deep);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      text-transform: none;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.4rem;
       line-height: 1.25;
+    }
+
+    #content {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+    }
+
+    #content footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-blue-soft);
+      opacity: 0.88;
+      padding: 0.35rem 0 0;
+      margin: 0;
     }
 
     h1.event-title-block .event-title-line {
@@ -100,13 +125,6 @@
       display: none;
     }
 
-    .subtitle {
-      font-size: 0.95rem;
-      color: var(--text-blue-soft);
-      margin-top: 0.35rem;
-      font-style: italic;
-    }
-
     .event-list {
       list-style: none;
     }
@@ -114,10 +132,10 @@
     .event-item {
       display: grid;
       grid-template-columns: auto 1fr auto;
-      gap: 1rem 1.25rem;
+      gap: 0.65rem 1rem;
       align-items: start;
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1rem;
+      padding: 0.85rem 1.1rem;
+      margin-bottom: 0.55rem;
       background: linear-gradient(135deg, #fffef9 0%, var(--parchment) 100%);
       border: 2px solid var(--item-border-gold);
       box-shadow: 0 2px 12px var(--shadow-warm);
@@ -153,8 +171,8 @@
     .event-item.dinner-showcase {
       position: relative;
       overflow: hidden;
-      min-height: clamp(200px, 32vh, 420px);
-      padding: 1.5rem 1.5rem;
+      min-height: clamp(150px, 22vh, 300px);
+      padding: 0.9rem 1.1rem;
       align-items: center;
       background-color: #3d2a22;
       background-image: none;
@@ -229,7 +247,7 @@
     .event-item.chai-break {
       grid-template-columns: auto minmax(0, 1fr) auto auto;
       align-items: center;
-      gap: 1rem 0.85rem;
+      gap: 0.65rem 0.75rem;
       background-color: var(--chai-backdrop);
       background-image: none;
     }
@@ -287,7 +305,7 @@
     .event-item.snacks-showcase {
       grid-template-columns: auto minmax(0, 1fr) auto auto;
       align-items: center;
-      gap: 1rem 0.85rem;
+      gap: 0.65rem 0.75rem;
       background-color: var(--snacks-backdrop);
       background-image: none;
     }
@@ -399,15 +417,15 @@
     }
 
     .description {
-      font-size: 1.05rem;
-      line-height: 1.5;
+      font-size: 1.02rem;
+      line-height: 1.4;
       color: var(--text-blue);
     }
 
     .meta-line {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       color: var(--text-blue-soft);
-      margin-top: 0.35rem;
+      margin-top: 0.25rem;
       opacity: 0.92;
     }
 
@@ -431,31 +449,14 @@
 
     .loading, .error {
       text-align: center;
-      padding: 2rem;
-      font-size: 1.1rem;
+      padding: 1rem 0.75rem;
+      font-size: 1.05rem;
       color: var(--text-blue-soft);
     }
 
     .error {
       background: rgba(21, 101, 168, 0.08);
       border: 2px solid var(--item-border-gold);
-    }
-
-    .admin-link {
-      display: inline-block;
-      margin-top: 0.5rem;
-      font-size: 0.9rem;
-      color: var(--text-blue-soft);
-      text-decoration: none;
-    }
-    .admin-link:hover { text-decoration: underline; }
-
-    footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--text-blue-soft);
-      opacity: 0.9;
     }
 
     /* Fixed backgrounds often break or stutter on mobile; scroll behaves reliably */
@@ -469,31 +470,30 @@
       .container {
         padding-left: max(0.75rem, env(safe-area-inset-left));
         padding-right: max(0.75rem, env(safe-area-inset-right));
-        padding-top: max(1rem, env(safe-area-inset-top));
-        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+        padding-top: max(0.65rem, env(safe-area-inset-top));
+        padding-bottom: max(0.35rem, env(safe-area-inset-bottom));
+      }
+
+      #content {
+        padding-bottom: max(0.2rem, env(safe-area-inset-bottom));
       }
 
       header {
         padding: 1rem 0.85rem;
-        margin-bottom: 1.5rem;
       }
 
       h1.event-title-block {
         font-size: clamp(1rem, 4.5vw + 0.35rem, 1.75rem);
-        letter-spacing: 0.05em;
-      }
-
-      .subtitle {
-        font-size: 0.88rem;
+        letter-spacing: 0.02em;
       }
 
       /* Stack: seq + body on row 1; time (and optional thumb) below — avoids crushed columns */
       .event-item {
         grid-template-columns: auto 1fr;
         grid-template-rows: auto auto;
-        gap: 0.65rem 0.85rem;
-        padding: 1rem 0.9rem;
-        margin-bottom: 0.85rem;
+        gap: 0.5rem 0.75rem;
+        padding: 0.7rem 0.8rem;
+        margin-bottom: 0.45rem;
       }
 
       .event-item .seq {
@@ -514,7 +514,7 @@
         grid-row: 2;
         text-align: left;
         min-width: 0;
-        padding-top: 0.5rem;
+        padding-top: 0.35rem;
         border-top: 1px solid rgba(201, 162, 39, 0.35);
         display: flex;
         flex-wrap: wrap;
@@ -550,8 +550,8 @@
       }
 
       .event-item.dinner-showcase {
-        min-height: clamp(180px, 38vh, 360px);
-        padding: 1rem 0.9rem;
+        min-height: clamp(120px, 26vh, 240px);
+        padding: 0.65rem 0.8rem;
       }
 
       .event-item.dinner-showcase .dinner-bg {
@@ -593,17 +593,17 @@
         <span class="event-title-line" id="event-title-1"></span>
         <span class="event-title-line" id="event-title-2"></span>
       </h1>
-      <p class="subtitle" id="event-subtitle">Programme schedule</p>
-      <a href="admin.html" class="admin-link">Admin →</a>
     </header>
     <div id="content">
-      <p class="loading">Loading programme…</p>
+      <div id="programme-root">
+        <p class="loading">Loading programme…</p>
+      </div>
+      <footer>Rongali Bihu — DFW</footer>
     </div>
-    <footer>Rongali Bihu — DFW</footer>
   </div>
   <script>
     const STORAGE_KEY = 'culturalEventProgramme';
-    const contentEl = document.getElementById('content');
+    const contentEl = document.getElementById('programme-root');
 
     function pickNameField(data, primary, typo) {
       if (!data) return '';
@@ -750,10 +750,6 @@
         return;
       }
       applyEventTitles(data);
-      const subEl = document.getElementById('event-subtitle');
-      if (subEl) {
-        subEl.textContent = data.subtitle || 'Programme schedule';
-      }
       const items = data.items || [];
       if (items.length === 0) {
         contentEl.innerHTML = '<p class="loading">No programme items. Load events.json from the <a href="admin.html">admin page</a>.</p>';
