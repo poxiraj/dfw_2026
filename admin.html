@@ -123,7 +123,7 @@
 
     .admin-item {
       display: grid;
-      grid-template-columns: auto auto 1fr auto auto;
+      grid-template-columns: auto auto 1fr auto minmax(8.25rem, auto);
       gap: 0.75rem 1rem;
       align-items: start;
       padding: 1rem 1.25rem;
@@ -131,6 +131,19 @@
       background: linear-gradient(135deg, #fffef9 0%, var(--parchment) 100%);
       border: 2px solid var(--item-border-gold);
       box-shadow: 0 2px 12px var(--shadow-warm);
+    }
+
+    .admin-item.admin-agenda-active {
+      box-shadow: 0 0 0 2px var(--burgundy), 0 2px 12px var(--shadow-warm);
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      align-items: stretch;
+      justify-self: end;
+      min-width: 0;
     }
 
     .admin-item .seq {
@@ -186,6 +199,29 @@
       white-space: nowrap;
     }
     .btn-now:hover { background: linear-gradient(145deg, #e8c547, var(--gold)); }
+
+    .btn-agenda-current {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      line-height: 1.25;
+      padding: 0.38rem 0.5rem;
+      background: linear-gradient(145deg, #e8dfd0, var(--parchment));
+      color: var(--text-blue-deep);
+      border: 2px solid var(--item-border-gold);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-agenda-current:hover:not(:disabled) {
+      background: linear-gradient(145deg, #e8c547, var(--gold));
+    }
+
+    .btn-agenda-current:disabled {
+      opacity: 0.75;
+      cursor: default;
+      background: linear-gradient(145deg, rgba(114, 47, 55, 0.14), var(--parchment));
+      border-color: var(--burgundy);
+    }
 
     .empty-msg, .error-msg {
       text-align: center;
@@ -285,19 +321,28 @@
       }
 
       .admin-item .time-cell {
-        grid-column: 1;
+        grid-column: 1 / -1;
         grid-row: 3;
         text-align: left;
         justify-self: start;
       }
 
-      .admin-item .btn-now {
-        grid-column: 2;
-        grid-row: 3;
-        justify-self: end;
-        align-self: center;
-        padding: 0.5rem 0.65rem;
+      .admin-item .admin-actions {
+        grid-column: 1 / -1;
+        grid-row: 4;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        justify-self: stretch;
+        width: 100%;
+        gap: 0.5rem;
+      }
+
+      .admin-item .admin-actions .btn-now,
+      .admin-item .admin-actions .btn-agenda-current {
+        flex: 1 1 calc(50% - 0.25rem);
         min-height: 44px;
+        padding: 0.5rem 0.55rem;
       }
 
       .saved-toast {
@@ -323,6 +368,7 @@
       <input type="file" id="file-input" accept=".json,application/json" />
       <p>Select <strong>events.json</strong> to load or replace the programme. Changes are saved for the main view.</p>
       <button type="button" class="btn-secondary" id="btn-reload-bundled">Reload from server copy (events.json)</button>
+      <button type="button" class="btn-secondary" id="btn-clear-manual-current" hidden style="margin-top:0.65rem">Clear programme focus (use schedule time)</button>
       <p style="margin-top:0.5rem;font-size:0.8rem;opacity:0.9">Use after editing the file on disk. Requires serving the folder over HTTP (e.g. <code>npm start</code>).</p>
     </section>
 
@@ -338,6 +384,35 @@
     const fileInput = document.getElementById('file-input');
     const savedToast = document.getElementById('saved-toast');
     const btnReloadBundled = document.getElementById('btn-reload-bundled');
+    const btnClearManual = document.getElementById('btn-clear-manual-current');
+
+    function hasManualAgendaHighlight(data) {
+      if (!data) return false;
+      const v = data.manualCurrentSequenceId;
+      return v !== undefined && v !== null && v !== '';
+    }
+
+    function updateClearManualBtn() {
+      if (btnClearManual) btnClearManual.hidden = !hasManualAgendaHighlight(getData());
+    }
+
+    function setManualAgendaCurrent(sequenceId) {
+      const data = getData();
+      if (!data || !data.items) return;
+      if (sequenceId === undefined || sequenceId === null || String(sequenceId).trim() === '') return;
+      const n = Number(sequenceId);
+      data.manualCurrentSequenceId = Number.isNaN(n) ? sequenceId : n;
+      saveToStorage(data);
+      renderAdminList(data);
+    }
+
+    function clearManualAgendaCurrent() {
+      const data = getData();
+      if (!data) return;
+      delete data.manualCurrentSequenceId;
+      saveToStorage(data);
+      renderAdminList(data);
+    }
 
     function escapeHtml(text) {
       const div = document.createElement('div');
@@ -435,15 +510,20 @@
     function renderAdminList(data) {
       if (!data || !data.items || data.items.length === 0) {
         adminContent.innerHTML = '<p class="empty-msg">No programme items. Load events.json above.</p>';
+        updateClearManualBtn();
         return;
       }
 
       const items = data.items;
       const artistKey = 'artist(s)';
+      const manualKey = hasManualAgendaHighlight(data) ? String(data.manualCurrentSequenceId) : null;
       adminContent.innerHTML = `
         <ul class="admin-list">
           ${items.map((item, i) => {
-            const seq = item.sequenceId != null && item.sequenceId !== '' ? String(item.sequenceId) : '—';
+            const rawSeq = item.sequenceId;
+            const hasSeq = rawSeq != null && rawSeq !== '';
+            const seq = hasSeq ? String(rawSeq) : '—';
+            const isAgendaCurrent = hasSeq && manualKey != null && String(rawSeq) === manualKey;
             const gap = item.gapTime != null && item.gapTime !== '' ? `<div class="meta">Gap after: ${escapeHtml(String(item.gapTime))} min</div>` : '';
             const prep = item.prepTime != null && item.prepTime !== '' && Number(item.prepTime) !== 0
               ? `<div class="meta">Prep: ${escapeHtml(String(item.prepTime))} min</div>`
@@ -452,8 +532,10 @@
               ? `<div class="meta"><strong>Artist(s):</strong> ${escapeHtml(String(item[artistKey]).trim())}</div>`
               : '';
             const descInner = itemDescHtml(item);
+            const agendaBtnDisabled = !hasSeq || isAgendaCurrent;
+            const agendaBtnLabel = isAgendaCurrent ? 'Focused in view' : 'Focus in programme view';
             return `
-            <li class="admin-item" data-index="${i}">
+            <li class="admin-item${isAgendaCurrent ? ' admin-agenda-active' : ''}" data-index="${i}">
               <span class="seq">${escapeHtml(seq)}</span>
               <div class="reorder-btns">
                 <button type="button" class="btn-up" data-index="${i}" ${i === 0 ? 'disabled' : ''}>▲</button>
@@ -469,14 +551,27 @@
                 <div>${escapeHtml(formatTimeForDisplay(item.expectedStartTime))}</div>
                 <div class="duration">${escapeHtml(formatDurationAdmin(item))}</div>
               </div>
-              <button type="button" class="btn-now" data-index="${i}">Set start to now</button>
+              <div class="admin-actions">
+                <button type="button" class="btn-now" data-index="${i}">Set start to now</button>
+                <button type="button" class="btn-agenda-current" data-sequence-id="${hasSeq ? escapeHtml(String(rawSeq)) : ''}" ${agendaBtnDisabled ? 'disabled' : ''}>${agendaBtnLabel}</button>
+              </div>
             </li>`;
           }).join('')}
         </ul>
       `;
 
+      updateClearManualBtn();
+
       adminContent.querySelectorAll('.btn-now').forEach(btn => {
         btn.addEventListener('click', () => setItemStartToNow(Number(btn.dataset.index)));
+      });
+      adminContent.querySelectorAll('.btn-agenda-current').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (btn.disabled) return;
+          const id = btn.getAttribute('data-sequence-id');
+          if (id == null || id === '') return;
+          setManualAgendaCurrent(id);
+        });
       });
       adminContent.querySelectorAll('.btn-up').forEach(btn => {
         btn.addEventListener('click', () => moveItem(Number(btn.dataset.index), 'up'));
@@ -497,6 +592,13 @@
             adminContent.innerHTML = '<p class="error-msg">JSON must have an "items" array.</p>';
             return;
           }
+          const prior = getData();
+          if (prior && hasManualAgendaHighlight(prior)) {
+            const k = String(prior.manualCurrentSequenceId);
+            if (data.items.some(function (it) { return String(it.sequenceId) === k; })) {
+              data.manualCurrentSequenceId = prior.manualCurrentSequenceId;
+            }
+          }
           saveToStorage(data);
           renderAdminList(data);
         } catch (e) {
@@ -510,6 +612,10 @@
       this.value = '';
     });
 
+    if (btnClearManual) {
+      btnClearManual.addEventListener('click', clearManualAgendaCurrent);
+    }
+
     btnReloadBundled.addEventListener('click', async function () {
       btnReloadBundled.disabled = true;
       try {
@@ -517,6 +623,13 @@
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         if (!data.items || !Array.isArray(data.items)) throw new Error('Invalid shape');
+        const prior = getData();
+        if (prior && hasManualAgendaHighlight(prior)) {
+          const k = String(prior.manualCurrentSequenceId);
+          if (data.items.some(function (it) { return String(it.sequenceId) === k; })) {
+            data.manualCurrentSequenceId = prior.manualCurrentSequenceId;
+          }
+        }
         saveToStorage(data);
         renderAdminList(data);
       } catch (e) {
@@ -530,6 +643,7 @@
       const existing = getData();
       if (existing && existing.items && existing.items.length > 0) {
         renderAdminList(existing);
+        updateClearManualBtn();
         return;
       }
       try {
@@ -541,6 +655,7 @@
           renderAdminList(data);
         }
       } catch (e) { /* file:// or missing */ }
+      updateClearManualBtn();
     })();
   </script>
 </body>

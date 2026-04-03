@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-title" content="Bihu Programme" />
   <title>Rongali Bihu — Programme</title>
   <link rel="manifest" href="manifest.json" />
+  <link rel="preload" href="dhol_beats.mp3" as="audio" type="audio/mpeg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
@@ -140,6 +141,7 @@
       border: 2px solid var(--item-border-gold);
       box-shadow: 0 2px 12px var(--shadow-warm);
       position: relative;
+      scroll-margin-block: 0.85rem;
     }
 
     .event-item::before {
@@ -165,6 +167,31 @@
       background: linear-gradient(145deg, #e8c547, var(--gold));
       color: var(--text-blue-deep);
       border-color: var(--item-border-gold);
+    }
+
+    /* Admin-focused “in progress” row (programme list scrolls to show it) */
+    .event-item.agenda-pinned.current {
+      border-left: 5px solid var(--burgundy);
+      box-shadow:
+        0 3px 18px rgba(114, 47, 55, 0.2),
+        inset 0 0 0 1px rgba(201, 162, 39, 0.35);
+    }
+
+    .event-item.agenda-pinned .body {
+      position: relative;
+    }
+
+    .event-item.agenda-pinned .body::before {
+      content: 'In progress';
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--burgundy);
+      margin-bottom: 0.35rem;
+      opacity: 0.92;
     }
 
     /* sequenceId 39 (dinner): maincourse.png | meal.jpg */
@@ -584,6 +611,153 @@
         font-size: 0.9rem;
       }
     }
+
+    /* First-load celebration: Holi-style bursts + flower petals (~15s) */
+    .celebration-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      pointer-events: none;
+      overflow: hidden;
+      transition: opacity 0.85s ease;
+    }
+
+    .celebration-overlay.celebration-overlay--fade {
+      opacity: 0;
+    }
+
+    .celebration-burst {
+      position: absolute;
+      width: 0;
+      height: 0;
+      left: var(--bx, 50%);
+      top: var(--by, 50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .celebration-burst::before,
+    .celebration-burst::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 7vmin;
+      height: 7vmin;
+      margin: -3.5vmin 0 0 -3.5vmin;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--c, #ff1493) 0%, var(--c-mid, transparent) 38%, transparent 72%);
+      animation: celebration-burst-ring 0.95s ease-out forwards;
+      animation-delay: var(--bdelay, 0s);
+      opacity: 0;
+      filter: saturate(1.35);
+    }
+
+    .celebration-burst::after {
+      animation-delay: calc(var(--bdelay, 0s) + 0.1s);
+      width: 5vmin;
+      height: 5vmin;
+      margin: -2.5vmin 0 0 -2.5vmin;
+      background: radial-gradient(circle, var(--c2, #ffeb3b) 0%, transparent 68%);
+    }
+
+    @keyframes celebration-burst-ring {
+      0% {
+        transform: scale(0.15);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(18);
+        opacity: 0;
+      }
+    }
+
+    .celebration-powder {
+      position: absolute;
+      left: var(--px, 50%);
+      top: var(--py, 50%);
+      width: 9vmin;
+      height: 9vmin;
+      margin: -4.5vmin 0 0 -4.5vmin;
+      border-radius: 48% 52% 50% 50%;
+      background:
+        radial-gradient(ellipse 70% 55% at 28% 32%, var(--pow1, #ff1744) 0%, transparent 52%),
+        radial-gradient(ellipse 60% 70% at 72% 58%, var(--pow2, #00e5ff) 0%, transparent 48%),
+        radial-gradient(circle at 50% 48%, var(--pow3, #ffea00) 0%, transparent 62%);
+      opacity: 0.95;
+      animation: celebration-powder-puff 1.05s ease-out forwards;
+      animation-delay: var(--pdelay, 0s);
+      filter: saturate(1.45);
+    }
+
+    @keyframes celebration-powder-puff {
+      0% {
+        transform: scale(0.12) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(15) rotate(25deg);
+        opacity: 0;
+      }
+    }
+
+    .celebration-spark {
+      position: absolute;
+      left: var(--sx, 50%);
+      top: var(--sy, 50%);
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--sc, #fff);
+      box-shadow:
+        0 0 8px 3px var(--sc),
+        22px 0 0 -1px var(--sc2, #ffea00),
+        -20px 10px 0 -1px var(--sc3, #ff1744),
+        12px -18px 0 -1px var(--sc4, #00e676),
+        -14px -14px 0 -1px var(--sc5, #651fff),
+        16px 14px 0 -1px var(--sc6, #ff9100),
+        -22px -6px 0 -1px var(--sc7, #00b0ff);
+      animation: celebration-spark-pop 0.6s ease-out forwards;
+      opacity: 0;
+      filter: saturate(1.4);
+    }
+
+    @keyframes celebration-spark-pop {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0;
+      }
+    }
+
+    .celebration-petal {
+      position: absolute;
+      top: -4vh;
+      width: 14px;
+      height: 20px;
+      border-radius: 50% 50% 50% 0;
+      background: linear-gradient(145deg, var(--pc1, #ffcdd2) 0%, var(--pc2, #f48fb1) 45%, var(--pc3, #fff9c4) 100%);
+      opacity: 0.92;
+      animation: celebration-petal-fall linear forwards;
+      box-shadow: 0 1px 3px rgba(74, 28, 34, 0.12);
+    }
+
+    @keyframes celebration-petal-fall {
+      0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+      }
+      100% {
+        transform: translate3d(var(--drift, 0px), 110vh, 0) rotate(var(--rot, 720deg));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .celebration-overlay {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -601,7 +775,149 @@
       <footer>Rongali Bihu — DFW</footer>
     </div>
   </div>
+  <!-- Load tries autoplay; if blocked, first pointer or mouse move on the page starts playback. -->
+  <audio id="dhol-beats-audio" autoplay preload="auto" playsinline src="dhol_beats.mp3"></audio>
   <script>
+    (function playDholBeats() {
+      const a = document.getElementById('dhol-beats-audio');
+      if (!a) return;
+      a.loop = false;
+
+      function tryPlay() {
+        if (!a.paused) return;
+        var p = a.play();
+        if (p !== undefined) p.catch(function () { /* may still be blocked until user moves pointer */ });
+      }
+
+      function detachMovePlay() {
+        document.removeEventListener('pointermove', onMovePlay);
+        document.removeEventListener('mousemove', onMovePlay);
+      }
+
+      function onMovePlay() {
+        if (!a.paused) {
+          detachMovePlay();
+          return;
+        }
+        var p = a.play();
+        if (p !== undefined) {
+          p.then(function () {
+            detachMovePlay();
+          }).catch(function () {});
+        }
+      }
+
+      if (a.readyState >= 2) tryPlay();
+      a.addEventListener('loadeddata', tryPlay, { once: true });
+      a.addEventListener('canplay', tryPlay, { once: true });
+      a.addEventListener('canplaythrough', tryPlay, { once: true });
+      window.addEventListener('load', tryPlay, { once: true });
+
+      document.addEventListener('pointermove', onMovePlay, { passive: true });
+      document.addEventListener('mousemove', onMovePlay, { passive: true });
+    })();
+
+    (function celebrationEntrance() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const overlay = document.createElement('div');
+      overlay.className = 'celebration-overlay';
+      overlay.setAttribute('aria-hidden', 'true');
+
+      /* Holi gulal palette — hot pink, cyan, saffron, lime, magenta, indigo, etc. */
+      const holi = [
+        '#FF1744', '#F50057', '#E91E63', '#FF4081', '#FF9100', '#FF6D00', '#FFEA00', '#FFEB3B',
+        '#76FF03', '#00E676', '#1DE9B6', '#00BFA5', '#00B0FF', '#00E5FF', '#2979FF', '#651FFF',
+        '#D500F9', '#E040FB', '#AB47BC', '#7C4DFF', '#536DFE', '#FF4081', '#FFFF00', '#EEFF41'
+      ];
+      function pickHoli(a, b) {
+        return holi[(a * 7 + b * 13) % holi.length];
+      }
+
+      const petalTriads = [
+        ['#ffcdd2', '#e91e63', '#fff59d'],
+        ['#f8bbd9', '#c2185b', '#ffe082'],
+        ['#ffecb3', '#ff6f00', '#fff9c4'],
+        ['#c8e6c9', '#2e7d32', '#e8f5e9'],
+        ['#b3e5fc', '#0277bd', '#e1f5fe'],
+        ['#e1bee7', '#6a1b9a', '#f3e5f5'],
+        ['#ffccbc', '#bf360c', '#fff3e0'],
+        ['#f8bbd9', '#ad1457', '#fce4ec'],
+        ['#d1c4e9', '#4527a0', '#ede7f6'],
+        ['#b2ebf2', '#00838f', '#e0f7fa'],
+        ['#fff176', '#f57f17', '#fffde7'],
+        ['#ffab91', '#d84315', '#fbe9e7']
+      ];
+
+      const span = 13.5;
+      for (let i = 0; i < 38; i++) {
+        const b = document.createElement('div');
+        b.className = 'celebration-burst';
+        b.style.setProperty('--bx', Math.random() * 96 + 2 + '%');
+        b.style.setProperty('--by', Math.random() * 88 + 6 + '%');
+        const c = holi[i % holi.length];
+        const c2 = holi[(i + 5) % holi.length];
+        b.style.setProperty('--c', c);
+        b.style.setProperty('--c-mid', c + '99');
+        b.style.setProperty('--c2', c2);
+        b.style.setProperty('--bdelay', Math.random() * span + 's');
+        overlay.appendChild(b);
+      }
+
+      for (let i = 0; i < 34; i++) {
+        const d = document.createElement('div');
+        d.className = 'celebration-powder';
+        d.style.setProperty('--px', Math.random() * 100 + '%');
+        d.style.setProperty('--py', Math.random() * 100 + '%');
+        d.style.setProperty('--pow1', pickHoli(i, 1));
+        d.style.setProperty('--pow2', pickHoli(i, 2));
+        d.style.setProperty('--pow3', pickHoli(i, 3));
+        d.style.setProperty('--pdelay', Math.random() * span + 's');
+        overlay.appendChild(d);
+      }
+
+      for (let i = 0; i < 32; i++) {
+        const s = document.createElement('div');
+        s.className = 'celebration-spark';
+        s.style.setProperty('--sx', Math.random() * 100 + '%');
+        s.style.setProperty('--sy', Math.random() * 100 + '%');
+        s.style.setProperty('--sc', holi[(i + 2) % holi.length]);
+        s.style.setProperty('--sc2', holi[(i + 1) % holi.length]);
+        s.style.setProperty('--sc3', holi[(i + 3) % holi.length]);
+        s.style.setProperty('--sc4', holi[(i + 4) % holi.length]);
+        s.style.setProperty('--sc5', holi[(i + 5) % holi.length]);
+        s.style.setProperty('--sc6', holi[(i + 6) % holi.length]);
+        s.style.setProperty('--sc7', holi[(i + 7) % holi.length]);
+        s.style.animationDelay = Math.random() * span + 's';
+        overlay.appendChild(s);
+      }
+
+      for (let i = 0; i < 120; i++) {
+        const p = document.createElement('div');
+        p.className = 'celebration-petal';
+        const [c1, c2, c3] = petalTriads[i % petalTriads.length];
+        p.style.setProperty('--pc1', c1);
+        p.style.setProperty('--pc2', c2);
+        p.style.setProperty('--pc3', c3);
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = 9 + Math.random() * 12 + 'px';
+        p.style.height = 12 + Math.random() * 16 + 'px';
+        p.style.setProperty('--drift', Math.random() * 200 - 100 + 'px');
+        p.style.setProperty('--rot', 360 + Math.random() * 1080 + 'deg');
+        p.style.animationDuration = 4.2 + Math.random() * 4.5 + 's';
+        p.style.animationDelay = Math.random() * 4.5 + 's';
+        p.style.opacity = String(0.72 + Math.random() * 0.26);
+        overlay.appendChild(p);
+      }
+
+      document.body.appendChild(overlay);
+      window.setTimeout(function () {
+        overlay.classList.add('celebration-overlay--fade');
+        window.setTimeout(function () {
+          overlay.remove();
+        }, 900);
+      }, 15000);
+    })();
+
     const STORAGE_KEY = 'culturalEventProgramme';
     const contentEl = document.getElementById('programme-root');
 
@@ -698,6 +1014,50 @@
       return -1;
     }
 
+    /** Admin-selected “current” item by sequenceId; list order unchanged — item is scrolled into view and highlighted. */
+    function hasManualAgendaHighlight(data) {
+      if (!data) return false;
+      const v = data.manualCurrentSequenceId;
+      return v !== undefined && v !== null && v !== '';
+    }
+
+    /**
+     * @returns {{ ordered: typeof items, currentIndex: number, agendaPinned: boolean }}
+     */
+    function getAgendaViewState(data) {
+      const items = data && Array.isArray(data.items) ? data.items : [];
+      const ordered = items.slice();
+      let currentIndex = getCurrentItemIndex(items);
+      let agendaPinned = false;
+
+      if (hasManualAgendaHighlight(data)) {
+        const key = String(data.manualCurrentSequenceId);
+        const idx = items.findIndex(function (it) {
+          return String(it.sequenceId) === key;
+        });
+        if (idx >= 0) {
+          currentIndex = idx;
+          agendaPinned = true;
+        }
+      }
+
+      return { ordered: ordered, currentIndex: currentIndex, agendaPinned: agendaPinned };
+    }
+
+    /** Scroll the programme list so the row for this sequence id is visible (#content is the scroller). */
+    function scrollProgrammeItemIntoView(sequenceIdKey) {
+      const list = contentEl.querySelector('.event-list');
+      if (!list || sequenceIdKey == null) return;
+      const key = String(sequenceIdKey);
+      const nodes = list.querySelectorAll('.event-item');
+      for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].getAttribute('data-sequence-id') === key) {
+          nodes[i].scrollIntoView({ block: 'center', behavior: 'smooth' });
+          return;
+        }
+      }
+    }
+
     function getData() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
@@ -743,7 +1103,7 @@
       return escapeHtml(String(d));
     }
 
-    function renderProgramme(data) {
+    function renderProgramme(data, scrollToManual) {
       if (!data) {
         applyEventTitles(null);
         contentEl.innerHTML = '<p class="error">No programme loaded. Run <code>npm start</code> and open this page over HTTP, or use <a href="admin.html">Admin</a> to load <strong>events.json</strong>.</p>';
@@ -755,12 +1115,15 @@
         contentEl.innerHTML = '<p class="loading">No programme items. Load events.json from the <a href="admin.html">admin page</a>.</p>';
         return;
       }
-      const currentIndex = getCurrentItemIndex(items);
+      const view = getAgendaViewState(data);
+      const ordered = view.ordered;
+      const currentIndex = view.currentIndex;
+      const agendaPinned = view.agendaPinned;
       const descClass = (style) => style === 'large' ? ' description-large' : style === 'largeBold' ? ' description-largeBold' : '';
       const artistKey = 'artist(s)';
       contentEl.innerHTML = `
         <ul class="event-list">
-          ${items.map((item, i) => {
+          ${ordered.map((item, i) => {
             const gap = item.gapTime != null && item.gapTime !== '' ? `<div class="meta-line">Gap after: ${escapeHtml(String(item.gapTime))} min</div>` : '';
             const prep = item.prepTime != null && item.prepTime !== '' && Number(item.prepTime) !== 0
               ? `<div class="meta-line">Prep: ${escapeHtml(String(item.prepTime))} min</div>`
@@ -768,7 +1131,8 @@
             const art = item[artistKey] && String(item[artistKey]).trim() !== ''
               ? `<div class="meta-line meta-artist"><span class="meta-label">Artist(s):</span>${escapeHtml(String(item[artistKey]).trim())}</div>`
               : '';
-            const seq = item.sequenceId != null && item.sequenceId !== '' ? String(item.sequenceId) : '—';
+            const seqIdRaw = item.sequenceId != null && item.sequenceId !== '' ? String(item.sequenceId) : '';
+            const seq = seqIdRaw || '—';
             const descInner = itemDescriptionHtml(item);
             const d2lower = item.description2 != null ? String(item.description2).trim().toLowerCase() : '';
             const isDinner = item.sequenceId === 39 || item.sequenceId === '39' || d2lower === 'dinner'
@@ -791,8 +1155,9 @@
               : isSnacks
                 ? '<div class="item-side-thumb item-side-thumb-snacks" aria-hidden="true"></div>'
                 : '';
+            const pinClass = agendaPinned && i === currentIndex ? ' agenda-pinned' : '';
             return `
-            <li class="event-item${dinnerClass}${chaiClass}${snacksClass}${houseClass}${i === currentIndex ? ' current' : ''}" data-index="${i}">
+            <li class="event-item${dinnerClass}${chaiClass}${snacksClass}${houseClass}${i === currentIndex ? ' current' : ''}${pinClass}" data-index="${i}" data-sequence-id="${escapeHtml(seqIdRaw)}">
               ${dinnerLayers}${houseLayers}
               <span class="seq">${escapeHtml(seq)}</span>
               <div class="body">
@@ -810,19 +1175,43 @@
           }).join('')}
         </ul>
       `;
+      if (scrollToManual && hasManualAgendaHighlight(data)) {
+        const k = String(data.manualCurrentSequenceId);
+        const found = items.some(function (it) { return String(it.sequenceId) === k; });
+        if (found) {
+          requestAnimationFrame(function () {
+            scrollProgrammeItemIntoView(k);
+          });
+        }
+      }
     }
 
     function refresh() {
       const data = getData();
-      if (data && data.items && data.items.length > 0) {
-        const currentIndex = getCurrentItemIndex(data.items);
-        const list = contentEl.querySelector('.event-list');
-        if (list) {
-          list.querySelectorAll('.event-item').forEach((el, i) => {
-            el.classList.toggle('current', i === currentIndex);
-          });
+      if (!data || !data.items || data.items.length === 0) return;
+      const view = getAgendaViewState(data);
+      const list = contentEl.querySelector('.event-list');
+      if (!list) return;
+      const els = list.querySelectorAll('.event-item');
+      if (els.length !== view.ordered.length) {
+        renderProgramme(data, false);
+        return;
+      }
+      for (let i = 0; i < view.ordered.length; i++) {
+        const el = els[i];
+        const item = view.ordered[i];
+        const sid = item.sequenceId != null && item.sequenceId !== '' ? String(item.sequenceId) : '';
+        if (!el || el.getAttribute('data-sequence-id') !== sid) {
+          renderProgramme(data, false);
+          return;
         }
       }
+      const ci = view.currentIndex;
+      const pinned = view.agendaPinned;
+      els.forEach((el, i) => {
+        el.classList.toggle('current', i === ci);
+        el.classList.toggle('agenda-pinned', pinned && i === ci);
+      });
     }
 
     async function init() {
@@ -833,6 +1222,13 @@
           const text = await res.text();
           const parsed = JSON.parse(text);
           if (parsed && parsed.items && parsed.items.length) {
+            const prior = getData();
+            if (prior && hasManualAgendaHighlight(prior)) {
+              const k = String(prior.manualCurrentSequenceId);
+              if (parsed.items.some(function (it) { return String(it.sequenceId) === k; })) {
+                parsed.manualCurrentSequenceId = prior.manualCurrentSequenceId;
+              }
+            }
             saveData(parsed);
             data = parsed;
           }
@@ -841,10 +1237,10 @@
       if (!data || !data.items || data.items.length === 0) {
         data = getData();
       }
-      renderProgramme(data);
+      renderProgramme(data, true);
       setInterval(refresh, 15000);
       window.addEventListener('storage', function () {
-        renderProgramme(getData());
+        renderProgramme(getData(), true);
       });
     }
 

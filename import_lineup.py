@@ -1,12 +1,17 @@
-"""Regenerate events.json from Lineup 2026.xlsx (run: python import_lineup.py)."""
+"""Regenerate events.json from Lineup_2026.xlsx or Lineup 2026.xlsx (run: python import_lineup.py)."""
 import json
+import os
 from datetime import datetime, time
 
 import openpyxl
 
-BASE = __file__.replace("\\", "/").rsplit("/", 1)[0]
-XLSX = f"{BASE}/Lineup 2026.xlsx"
-JSON_PATH = f"{BASE}/events.json"
+BASE = os.path.dirname(os.path.abspath(__file__))
+JSON_PATH = os.path.join(BASE, "events.json")
+
+XLSX_CANDIDATES = [
+    os.path.join(BASE, "Lineup_2026.xlsx"),
+    os.path.join(BASE, "Lineup 2026.xlsx"),
+]
 
 
 def fmt_time(v):
@@ -31,8 +36,30 @@ def fmt_val(v, h):
     return v
 
 
+def resolve_xlsx_path():
+    for path in XLSX_CANDIDATES:
+        if os.path.isfile(path):
+            return path
+    raise FileNotFoundError(
+        "No lineup workbook found. Place one of: "
+        + ", ".join(os.path.basename(p) for p in XLSX_CANDIDATES)
+    )
+
+
+def normalize_item(obj):
+    """Map spreadsheet column names to the JSON schema the app expects."""
+    for bad in ("perfomers/speakers", "peformers/speakers", "performers/speakers"):
+        if bad in obj:
+            obj["artist(s)"] = obj.pop(bad)
+            break
+    if "Coordinator" in obj:
+        obj["coordinator"] = obj.pop("Coordinator")
+    return obj
+
+
 def main():
-    wb = openpyxl.load_workbook(XLSX, read_only=True, data_only=True)
+    xlsx_path = resolve_xlsx_path()
+    wb = openpyxl.load_workbook(xlsx_path, read_only=True, data_only=True)
     ws = wb.active
     rows = list(ws.iter_rows(values_only=True))
     wb.close()
@@ -79,7 +106,7 @@ def main():
         obj = {}
         for h, v in zip(headers, cells):
             obj[h] = fmt_val(v, h)
-        items.append(obj)
+        items.append(normalize_item(obj))
 
     out = {"items": items}
     for k in ("eventName1", "eventName2", "eventName", "evnetName1", "evnetName2", "subtitle"):
@@ -92,7 +119,7 @@ def main():
     with open(JSON_PATH, "w", encoding="utf-8") as f:
         json.dump(out, f, indent=2, ensure_ascii=False)
         f.write("\n")
-    print("Wrote", JSON_PATH, "items:", len(items))
+    print("Wrote", JSON_PATH, "from", os.path.basename(xlsx_path), "items:", len(items))
 
 
 if __name__ == "__main__":
