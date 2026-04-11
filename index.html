@@ -12,7 +12,7 @@
   <link rel="preload" href="dhol_beats.mp3" as="audio" type="audio/mpeg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Sans+Bengali:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --cream: #f5f0e6;
@@ -33,6 +33,12 @@
       --chai-backdrop: #faf8f5;
       /* Snacks row (sequenceId 0) — jolpaan.png */
       --snacks-backdrop: #faf8f5;
+      /* Background image — overridden for touch/mobile devices below */
+      --backdrop: url("mainBackDrop.png");
+    }
+    /* Use the mobile-optimised backdrop on phones and tablets (touch-primary devices) */
+    @media (pointer: coarse) {
+      :root { --backdrop: url("mainBackdropMobile.png"); }
     }
 
     * {
@@ -58,7 +64,7 @@
       background-color: #2c1810;
       background-image:
         linear-gradient(rgba(245, 240, 230, 0.22) 0%, rgba(232, 223, 208, 0.18) 45%, transparent 75%),
-        url("mainBackDrop.png");
+        var(--backdrop);
       /* Full width (no wide side bars); anchor top so overflow clips at bottom, not the top */
       background-size: 100% 100%, 100% auto;
       background-position: center, center top;
@@ -192,6 +198,20 @@
       color: var(--burgundy);
       margin-bottom: 0.35rem;
       opacity: 0.92;
+    }
+
+    /* Auto-advance countdown status line (shown inside item body) */
+    .auto-adv-status {
+      font-family: 'Cinzel', serif;
+      font-size: 0.63rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-top: 0.3rem;
+      min-height: 1em;
+    }
+    .event-item.agenda-pinned .auto-adv-status {
+      color: var(--burgundy);
+      opacity: 0.8;
     }
 
     /* sequenceId 39 (dinner): maincourse.png | meal.jpg */
@@ -456,7 +476,7 @@
       opacity: 0.92;
     }
 
-    .meta-line.meta-artist .meta-label {
+    .meta-line.meta-presenter .meta-label {
       font-weight: 600;
       margin-right: 0.25rem;
     }
@@ -753,8 +773,139 @@
       }
     }
 
+    /* Ambient petal fall — reuses .celebration-petal but with gentler opacity */
+    .ambient-petal {
+      opacity: 0.55;
+    }
+
+    /* ── Alert announcement banner ─────────────────────────────────────────── */
+    #alert-banner {
+      position: fixed;
+      inset: 0;
+      z-index: 20000;
+      display: flex;
+      align-items: flex-start;   /* flex-start + margin:auto on card = safe centering */
+      justify-content: center;
+      padding: 1rem;
+      overflow-y: auto;          /* scroll on short viewports so clock is never clipped */
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    #alert-banner.ab-visible {
+      pointer-events: auto;
+      opacity: 1;
+    }
+    .ab-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      cursor: pointer;
+    }
+    .ab-card {
+      position: relative;
+      z-index: 1;
+      max-width: 360px;
+      width: 100%;
+      flex-shrink: 0;
+      margin-top: auto;
+      margin-bottom: auto;
+      background: #242424;
+      border: 1.5px solid rgba(201, 162, 39, 0.45);
+      border-top: 4px solid #c9a227;
+      border-radius: 6px;
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.75),
+        0 2px 12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      padding: 1.5rem 1.6rem 1.35rem;
+      text-align: center;
+      transform: translateY(-36px) scale(0.97);
+      transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    /* Namaskar image — small, centered, above the text */
+    .ab-namaskar {
+      display: block;
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      margin: 0 auto 0.85rem;
+      border-radius: 50%;
+      border: 2px solid rgba(201, 162, 39, 0.7);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+    }
+    /* Countdown timer pill — absolute top-right of the card */
+    .ab-timer {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.75rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+      background: #8b2030;
+      border: 1px solid rgba(201, 162, 39, 0.6);
+      border-radius: 20px;
+      padding: 0.22rem 0.75rem;
+      min-width: 3.8rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+    #alert-banner.ab-visible .ab-card {
+      transform: translateY(0) scale(1);
+    }
+    .ab-message {
+      font-family: 'Cinzel', serif;
+      font-size: 0.84rem;
+      font-weight: 600;
+      line-height: 1.72;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      letter-spacing: 0.025em;
+    }
+    .ab-assamese {
+      display: block;
+      font-family: 'Noto Sans Bengali', system-ui, sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      line-height: 1.65;
+      letter-spacing: 0;
+      color: #ffffff;
+      margin-bottom: 0.55rem;
+    }
+    .ab-english {
+      display: block;
+      font-size: 0.84rem;
+      color: #d4d4d4;
+    }
+    /* Minimalist Ok button */
+    .ab-dismiss {
+      padding: 0.3rem 1.6rem;
+      background: transparent;
+      color: #c9a227;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      border: 1.5px solid rgba(201, 162, 39, 0.65);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+    }
+    .ab-dismiss:hover, .ab-dismiss:focus-visible {
+      background: rgba(201, 162, 39, 0.18);
+      border-color: #c9a227;
+      color: #f0d060;
+      outline: none;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .celebration-overlay {
+        display: none !important;
+      }
+      #ambient-overlay {
         display: none !important;
       }
     }
@@ -775,46 +926,120 @@
       <footer>Rongali Bihu — DFW</footer>
     </div>
   </div>
-  <!-- Load tries autoplay; if blocked, first pointer or mouse move on the page starts playback. -->
-  <audio id="dhol-beats-audio" autoplay preload="auto" playsinline src="dhol_beats.mp3"></audio>
+  <!-- Audio element for dhol music; playback is controlled exclusively by the Admin page. -->
+  <audio id="dhol-beats-audio" preload="auto" playsinline src="dhol_beats.mp3"></audio>
   <script>
-    (function playDholBeats() {
+    (function dholAudioControl() {
+      const MUSIC_KEY = 'dholMusicState';
       const a = document.getElementById('dhol-beats-audio');
       if (!a) return;
       a.loop = false;
+      let _unlocked = false; // true once audio has played at least once in this tab
 
-      function tryPlay() {
-        if (!a.paused) return;
-        var p = a.play();
-        if (p !== undefined) p.catch(function () { /* may still be blocked until user moves pointer */ });
-      }
-
-      function detachMovePlay() {
-        document.removeEventListener('pointermove', onMovePlay);
-        document.removeEventListener('mousemove', onMovePlay);
-      }
-
-      function onMovePlay() {
-        if (!a.paused) {
-          detachMovePlay();
-          return;
-        }
-        var p = a.play();
-        if (p !== undefined) {
-          p.then(function () {
-            detachMovePlay();
-          }).catch(function () {});
+      /** Play or pause based on the admin-set state in localStorage. */
+      function _sync() {
+        const shouldPlay = localStorage.getItem(MUSIC_KEY) === 'playing';
+        if (shouldPlay) {
+          if (a.paused) {
+            a.play().then(function () { _unlocked = true; }).catch(function () {});
+          }
+        } else {
+          if (!a.paused) a.pause();
         }
       }
 
-      if (a.readyState >= 2) tryPlay();
-      a.addEventListener('loadeddata', tryPlay, { once: true });
-      a.addEventListener('canplay', tryPlay, { once: true });
-      a.addEventListener('canplaythrough', tryPlay, { once: true });
-      window.addEventListener('load', tryPlay, { once: true });
+      /**
+       * Called on first user interaction (pointermove / click / touchstart).
+       * Browsers require a user gesture before audio can play.  _sync() is now
+       * also called every second via the updateAutoAdvStatus polling loop, so
+       * audio starts within ~1s of any interaction on this page.
+       */
+      function _onGesture() {
+        if (localStorage.getItem(MUSIC_KEY) !== 'playing') return; // admin hasn't requested play
+        if (!a.paused) { _unlocked = true; _detachGesture(); return; }
+        a.play().then(function () {
+          _unlocked = true;
+          _detachGesture();
+        }).catch(function () {});
+      }
 
-      document.addEventListener('pointermove', onMovePlay, { passive: true });
-      document.addEventListener('mousemove', onMovePlay, { passive: true });
+      function _detachGesture() {
+        document.removeEventListener('pointermove', _onGesture);
+        document.removeEventListener('click',       _onGesture);
+        document.removeEventListener('touchstart',  _onGesture);
+      }
+
+      // Lightweight gesture listeners — only activate audio when admin has requested it
+      document.addEventListener('pointermove', _onGesture, { passive: true });
+      document.addEventListener('click',       _onGesture, { passive: true });
+      document.addEventListener('touchstart',  _onGesture, { passive: true });
+
+      // Expose sync for 1-second polling (called by updateAutoAdvStatus as a fallback)
+      window.syncDholAudio = _sync;
+
+      // React to admin toggling music from the admin tab — always try _sync()
+      // play() is silently rejected by the browser if no gesture yet; gesture
+      // listeners above will catch it on the user's first interaction in this tab
+      window.addEventListener('storage', function (e) {
+        if (e.key !== MUSIC_KEY) return;
+        _sync();
+      });
+    })();
+
+    /* ── Server-Sent Events: real-time cross-device admin control ─────────── *
+     * Connects to /control-stream so admin.html actions on one device (laptop) *
+     * instantly reach this page on any other device (iPad, phone) on the same  *
+     * network.  Falls back gracefully to the localStorage polling path if the  *
+     * server is not available (e.g. opened via file://).                       */
+    (function setupControlStream() {
+      if (!window.EventSource) return; // very old browser — polling handles it
+
+      function connect() {
+        var es = new window.EventSource('/control-stream');
+
+        es.onmessage = function (e) {
+          try {
+            var state = JSON.parse(e.data);
+
+            // ── Focus override (admin clicked a different item) ──────────────
+            // This is the key cross-device path: admin on laptop, display on iPad.
+            // 'focus' is sent as a transient broadcast (not persisted on the server),
+            // so it only arrives when the admin explicitly changes the focused item.
+            if ('focus' in state) {
+              if (state.focus !== null && state.focus !== undefined) {
+                // Admin focused a specific item — override whatever is running now
+                if (window.applyFocusOverride) {
+                  window.applyFocusOverride(state.focus.seqId, state.focus.startedAt);
+                }
+              } else {
+                // Admin cleared the focus (stop / reset)
+                if (window.clearFocusOverride) window.clearFocusOverride();
+              }
+              return; // focus messages carry no other keys
+            }
+
+            // ── Music & banner (update localStorage then call sync) ──────────
+            if (state.music !== undefined) {
+              try { localStorage.setItem('dholMusicState', state.music); } catch (_) {}
+              if (window.syncDholAudio) window.syncDholAudio();
+            }
+            if (state.banner !== undefined) {
+              try { localStorage.setItem('manualBannerState', state.banner); } catch (_) {}
+              if (window.syncManualBanner) window.syncManualBanner();
+            }
+          } catch (_) {}
+        };
+
+        es.onerror = function () {
+          // EventSource reconnects automatically — nothing to do here.
+          // If the server is unreachable (file:// mode), it just keeps retrying
+          // silently and the 1-second polling loop handles any state.
+        };
+      }
+
+      // Small delay so all IIFEs finish defining window.sync* before the first
+      // SSE message arrives (the server sends state immediately on connect)
+      setTimeout(connect, 50);
     })();
 
     (function celebrationEntrance() {
@@ -1021,6 +1246,43 @@
       return v !== undefined && v !== null && v !== '';
     }
 
+    /* ── Auto-advance timer ───────────────────────────────────────────────── */
+    let _autoAdvanceTimer = null;
+
+    /**
+     * Returns the current auto-advance phase based on data.autoAdvanceStartedAt:
+     *   'performing' - item is live; durationMinutes still counting down
+     *   'prep'       - duration elapsed; waiting for next item's prepTime
+     *   'advance'    - both elapsed; caller should move to the next item
+     *   'done'       - last item finished; caller should clear the highlight
+     * Returns null when auto-advance is not active.
+     */
+    function getAutoAdvanceState(data) {
+      if (!hasManualAgendaHighlight(data)) return null;
+      if (!data.autoAdvanceStartedAt) return null;
+      const items = data.items || [];
+      const key = String(data.manualCurrentSequenceId);
+      const currentIdx = items.findIndex(function (it) { return String(it.sequenceId) === key; });
+      if (currentIdx < 0) return null;
+      const currentItem = items[currentIdx];
+      const durationMs = Math.max(0, Number(currentItem.durationMinutes) || 0) * 60000;
+      const elapsed = Date.now() - data.autoAdvanceStartedAt;
+      if (elapsed < durationMs) {
+        return { phase: 'performing', currentIdx: currentIdx, remainingMs: durationMs - elapsed };
+      }
+      const nextIdx = currentIdx + 1;
+      if (nextIdx >= items.length) {
+        return { phase: 'done', currentIdx: currentIdx };
+      }
+      const nextItem = items[nextIdx];
+      const prepMs = Math.max(0, Number(nextItem.prepTime) || 0) * 60000;
+      const prepElapsed = elapsed - durationMs;
+      if (prepElapsed < prepMs) {
+        return { phase: 'prep', currentIdx: currentIdx, nextIdx: nextIdx, remainingMs: prepMs - prepElapsed };
+      }
+      return { phase: 'advance', currentIdx: currentIdx, nextIdx: nextIdx };
+    }
+
     /**
      * @returns {{ ordered: typeof items, currentIndex: number, agendaPinned: boolean }}
      */
@@ -1037,7 +1299,9 @@
         });
         if (idx >= 0) {
           currentIndex = idx;
-          agendaPinned = true;
+          // Show "In Progress" badge only while actively performing (not during prep wait)
+          const advState = getAutoAdvanceState(data);
+          agendaPinned = !advState || advState.phase === 'performing';
         }
       }
 
@@ -1057,6 +1321,452 @@
         }
       }
     }
+
+    /* ── Auto-advance scheduling ──────────────────────────────────────────── */
+
+    /** Move manualCurrentSequenceId to items[nextIdx] and restart the timer. */
+    function _doAdvanceToNext(nextIdx) {
+      const freshData = getData();
+      if (!freshData) return;
+      const items = freshData.items || [];
+      const nextItem = items[nextIdx];
+      if (!nextItem) { _clearAutoAdvance(); return; }
+      const n = Number(nextItem.sequenceId);
+      freshData.manualCurrentSequenceId = Number.isNaN(n) ? nextItem.sequenceId : n;
+      freshData.autoAdvanceStartedAt = Date.now();
+      saveData(freshData);
+      renderProgramme(freshData, true);
+      if (window.updateAmbientAnimation) window.updateAmbientAnimation(freshData);
+      scheduleAutoAdvance(freshData);
+    }
+
+    /** All items done — remove manual highlight and auto-advance data. */
+    function _clearAutoAdvance() {
+      const freshData = getData();
+      if (!freshData) return;
+      delete freshData.manualCurrentSequenceId;
+      delete freshData.autoAdvanceStartedAt;
+      saveData(freshData);
+      renderProgramme(freshData, false);
+      if (window.updateAmbientAnimation) window.updateAmbientAnimation(freshData);
+    }
+
+    /**
+     * Schedule the next auto-advance timeout based on the current state.
+     * Cancels any previously pending timer first.
+     */
+    function scheduleAutoAdvance(data) {
+      if (_autoAdvanceTimer !== null) {
+        clearTimeout(_autoAdvanceTimer);
+        _autoAdvanceTimer = null;
+      }
+      const state = getAutoAdvanceState(data);
+      if (!state) return;
+
+      if (state.phase === 'advance') {
+        _doAdvanceToNext(state.nextIdx);
+        return;
+      }
+      if (state.phase === 'done') {
+        _clearAutoAdvance();
+        return;
+      }
+      if (state.phase === 'performing') {
+        // When duration ends, re-evaluate (will be 'prep' or 'advance' or 'done')
+        _autoAdvanceTimer = setTimeout(function () {
+          _autoAdvanceTimer = null;
+          const d = getData();
+          if (!d) return;
+          refresh();            // drop "In Progress" badge immediately
+          scheduleAutoAdvance(d);
+        }, state.remainingMs);
+      } else if (state.phase === 'prep') {
+        // Remove "In Progress" now; advance when prep time expires
+        refresh();
+        _autoAdvanceTimer = setTimeout(function () {
+          _autoAdvanceTimer = null;
+          _doAdvanceToNext(state.nextIdx);
+        }, state.remainingMs);
+      }
+    }
+
+    /**
+     * Called by the SSE handler when admin sets a new focus item from any device.
+     * Overrides whatever is currently "In Progress" and restarts auto-advance
+     * from the given item — exactly as if the admin had clicked the focus button
+     * on this same device.
+     */
+    window.applyFocusOverride = function (seqId, startedAt) {
+      const data = getData();
+      if (!data || !data.items) return;
+      const n = Number(seqId);
+      data.manualCurrentSequenceId = Number.isNaN(n) ? seqId : n;
+      data.autoAdvanceStartedAt    = Number(startedAt) || Date.now();
+      saveData(data);
+      renderProgramme(data, true);
+      scheduleAutoAdvance(data);
+      if (window.updateAmbientAnimation) window.updateAmbientAnimation(data);
+    };
+
+    /** Called by the SSE handler when admin clears the focus (stop auto-advance). */
+    window.clearFocusOverride = function () {
+      const data = getData();
+      if (!data) return;
+      delete data.manualCurrentSequenceId;
+      delete data.autoAdvanceStartedAt;
+      saveData(data);
+      renderProgramme(data, false);
+      scheduleAutoAdvance(data);
+      if (window.updateAmbientAnimation) window.updateAmbientAnimation(data);
+    };
+
+    /** Update the per-item countdown text every second (called by 1-second interval). */
+    function updateAutoAdvStatus() {
+      const data = getData();
+      if (window.checkAndShowAlert)  window.checkAndShowAlert(data);
+      if (window.syncDholAudio)      window.syncDholAudio();      // polling fallback for admin audio toggle
+      if (window.syncManualBanner)   window.syncManualBanner();   // polling fallback for admin banner toggle
+      const state = getAutoAdvanceState(data);
+      const allStatus = document.querySelectorAll('.auto-adv-status');
+      allStatus.forEach(function (el) { el.textContent = ''; });
+      if (!state) return;
+      const items = data.items || [];
+
+      function fmtMs(ms) {
+        const totalSecs = Math.max(0, Math.round(ms / 1000));
+        const m = Math.floor(totalSecs / 60);
+        const s = totalSecs % 60;
+        return m + ':' + String(s).padStart(2, '0');
+      }
+
+      if (state.phase === 'performing') {
+        const item = items[state.currentIdx];
+        if (!item) return;
+        const sid = item.sequenceId != null ? String(item.sequenceId) : '';
+        const el = document.querySelector('.auto-adv-status[data-adv-id="' + sid + '"]');
+        if (el) el.textContent = fmtMs(state.remainingMs) + ' remaining';
+      } else if (state.phase === 'prep') {
+        const nextItem = items[state.nextIdx];
+        if (!nextItem) return;
+        const sid = String(nextItem.sequenceId);
+        const el = document.querySelector('.auto-adv-status[data-adv-id="' + sid + '"]');
+        if (el) el.textContent = 'Prep: ' + fmtMs(state.remainingMs);
+      }
+    }
+
+    /* ── Ambient petal / spray animation ─────────────────────────────────── */
+    (function setupAmbientAnimation() {
+      const _holiAmb = [
+        '#FF1744','#F50057','#E91E63','#FF9100','#FFEA00',
+        '#76FF03','#00E676','#00B0FF','#00E5FF','#651FFF',
+        '#D500F9','#E040FB','#FF4081','#FFFF00'
+      ];
+      const _petalAmb = [
+        ['#ffcdd2','#e91e63','#fff59d'],
+        ['#f8bbd9','#c2185b','#ffe082'],
+        ['#ffecb3','#ff6f00','#fff9c4'],
+        ['#c8e6c9','#2e7d32','#e8f5e9'],
+        ['#b3e5fc','#0277bd','#e1f5fe'],
+        ['#e1bee7','#6a1b9a','#f3e5f5'],
+        ['#ffccbc','#bf360c','#fff3e0'],
+        ['#f8bbd9','#ad1457','#fce4ec']
+      ];
+      let _petalIdx = 0, _holiIdx = 0;
+      let _overlay = null;
+      let _timer = null;
+      let _mode = 'off';
+
+      function _ensureOverlay() {
+        if (!_overlay) {
+          _overlay = document.createElement('div');
+          _overlay.id = 'ambient-overlay';
+          _overlay.setAttribute('aria-hidden', 'true');
+          _overlay.style.cssText = 'position:fixed;inset:0;z-index:9998;pointer-events:none;overflow:hidden;';
+          document.body.appendChild(_overlay);
+        }
+        return _overlay;
+      }
+
+      function _spawnPetal(small) {
+        const ov = _ensureOverlay();
+        const [c1, c2, c3] = _petalAmb[_petalIdx++ % _petalAmb.length];
+        const p = document.createElement('div');
+        p.className = 'celebration-petal ambient-petal';
+        p.style.setProperty('--pc1', c1);
+        p.style.setProperty('--pc2', c2);
+        p.style.setProperty('--pc3', c3);
+        p.style.left = Math.random() * 100 + '%';
+        const w = small ? 5 + Math.random() * 7 : 7 + Math.random() * 11;
+        p.style.width = w + 'px';
+        p.style.height = (w * 1.4) + 'px';
+        p.style.setProperty('--drift', (Math.random() * 120 - 60) + 'px');
+        p.style.setProperty('--rot', (360 + Math.random() * 720) + 'deg');
+        const dur = 5.5 + Math.random() * 4.5;
+        p.style.animationDuration = dur + 's';
+        p.style.animationDelay = '0s';
+        ov.appendChild(p);
+        setTimeout(function () { if (p.parentNode) p.remove(); }, (dur + 0.3) * 1000);
+      }
+
+      function _spawnPowder() {
+        const ov = _ensureOverlay();
+        const i = _holiIdx++;
+        const d = document.createElement('div');
+        d.className = 'celebration-powder';
+        d.style.setProperty('--px', Math.random() * 100 + '%');
+        d.style.setProperty('--py', Math.random() * 70 + '%');
+        d.style.setProperty('--pow1', _holiAmb[i % _holiAmb.length]);
+        d.style.setProperty('--pow2', _holiAmb[(i + 4) % _holiAmb.length]);
+        d.style.setProperty('--pow3', _holiAmb[(i + 8) % _holiAmb.length]);
+        d.style.setProperty('--pdelay', '0s');
+        ov.appendChild(d);
+        setTimeout(function () { if (d.parentNode) d.remove(); }, 1400);
+      }
+
+      function _setMode(mode) {
+        if (_mode === mode) return;
+        _mode = mode;
+        if (_timer !== null) { clearInterval(_timer); _timer = null; }
+        if (mode === 'off') return;
+        if (mode === 'mild') {
+          // ~1-2 small petals every 900ms — very gentle
+          _timer = setInterval(function () {
+            _spawnPetal(true);
+            if (Math.random() < 0.35) _spawnPetal(true);
+          }, 900);
+        } else if (mode === 'moderate') {
+          // ~3 petals + occasional powder every 380ms — noticeable but not hectic
+          _timer = setInterval(function () {
+            _spawnPetal(false);
+            _spawnPetal(false);
+            if (Math.random() < 0.55) _spawnPetal(false);
+            if (Math.random() < 0.4) _spawnPowder();
+          }, 380);
+        }
+      }
+
+      /**
+       * Determine the desired animation mode from the current In-Progress sequenceId:
+       *   - No item / seq 0   → mild (pre-show atmosphere)
+       *   - seq 1             → off  (Welcome Address: quiet)
+       *   - seq 2–16          → off
+       *   - seq 17            → mild (resumes)
+       *   - seq 18–38         → off
+       *   - seq 39            → moderate (dinner celebration)
+       *   - seq 40+           → off
+       */
+      window.updateAmbientAnimation = function (data) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { _setMode('off'); return; }
+        const sid = data ? data.manualCurrentSequenceId : null;
+        let mode = 'mild'; // default: mild when nothing is In Progress
+        if (sid != null && sid !== '') {
+          const n = Number(sid);
+          if (n === 0)                         mode = 'mild';
+          else if (n === 1)                    mode = 'off';
+          else if (n >= 2  && n <= 16)         mode = 'off';
+          else if (n === 17)                   mode = 'mild';
+          else if (n >= 18 && n <= 38)         mode = 'off';
+          else if (n === 39)                   mode = 'moderate';
+          else                                 mode = 'off';
+        }
+        _setMode(mode);
+      };
+    })();
+    /* ─────────────────────────────────────────────────────────────────────── */
+
+    /* ── Announcement alert banners with analog countdown clock ───────────── */
+    (function setupAlertBanners() {
+      const CONFIGS = [
+        {
+          seqId: 0,
+          alertBeforeMs: 10 * 60000,
+          message: 'The order of the evening is about to begin, soon. Please take your seats.'
+        },
+        {
+          seqId: 17,
+          alertBeforeMs: 10 * 60000,
+          message: 'We are about to resume our programs. Please take your seats!'
+        },
+        {
+          seqId: 39,
+          alertBeforeMs: 10 * 60000,
+          message: 'Mukoli Bihu session is about to begin. Please come to the stage to participate!'
+        }
+      ];
+
+      let _shownKey        = null;   // tracks which (seqId_startTime) has been shown
+      let _endTime         = null;   // absolute ms timestamp when countdown ends (null = no countdown)
+      let _manualStartTime = null;   // absolute ms timestamp when manual banner was shown
+      let _clockIv         = null;   // setInterval handle for timer ticks
+      let _isManual        = false;  // true when banner was opened by admin toggle
+      const MANUAL_KEY = 'manualBannerState';
+
+      function _p2(n) { return String(n).padStart(2, '0'); }
+
+      /** Lazily create (or return existing) banner DOM node. */
+      function _getBanner() {
+        var el = document.getElementById('alert-banner');
+        if (!el) {
+          el = document.createElement('div');
+          el.id = 'alert-banner';
+          el.setAttribute('role', 'alertdialog');
+          el.innerHTML =
+            '<div class="ab-backdrop" onclick="window.dismissAlertBanner()"></div>' +
+            '<div class="ab-card">' +
+              '<div class="ab-timer" id="ab-timer" aria-live="polite">--:--</div>' +
+              '<img src="namaskar.png" class="ab-namaskar" alt="" aria-hidden="true">' +
+              '<p class="ab-message" id="ab-msg">' +
+                '<span class="ab-assamese">প্ৰিয় দৰ্শক,&nbsp; অনুষ্ঠানসূচী অতি শীঘ্ৰেই আৰম্ভ হ\'ব। অনুগ্ৰহ কৰি আপোনালোকে আসন গ্ৰহণ কৰক।</span>' +
+                '<span class="ab-english" id="ab-en"></span>' +
+              '</p>' +
+              '<button class="ab-dismiss" onclick="window.dismissAlertBanner()">Ok</button>' +
+            '</div>';
+          document.body.appendChild(el);
+        }
+        return el;
+      }
+
+      /** Update the timer pill every second — counts down or up depending on mode. */
+      function _tickClock() {
+        var timerEl = document.getElementById('ab-timer');
+        if (!timerEl) return;
+        if (_endTime !== null) {
+          // Timed banner: count DOWN to end
+          var remMs = Math.max(0, _endTime - Date.now());
+          var totalSecs = Math.round(remMs / 1000);
+          timerEl.textContent = Math.floor(totalSecs / 60) + ':' + _p2(totalSecs % 60);
+          if (remMs <= 0) { window.dismissAlertBanner(); }
+        } else if (_isManual && _manualStartTime !== null) {
+          // Manual banner: count UP (elapsed time since shown)
+          var elapsed = Math.floor((Date.now() - _manualStartTime) / 1000);
+          timerEl.textContent = Math.floor(elapsed / 60) + ':' + _p2(elapsed % 60);
+        }
+      }
+
+      function _stopClock() {
+        if (_clockIv) { clearInterval(_clockIv); _clockIv = null; }
+      }
+
+      window.dismissAlertBanner = function () {
+        _stopClock();
+        _endTime = null;
+        _manualStartTime = null;
+        var el = document.getElementById('alert-banner');
+        if (el) el.classList.remove('ab-visible', 'ab-manual');
+        var timerEl = document.getElementById('ab-timer');
+        if (timerEl) timerEl.textContent = '--:--';
+        if (_isManual) {
+          _isManual = false;
+          try { localStorage.setItem(MANUAL_KEY, 'hidden'); } catch (e) {}
+          // Notify via SSE (local dev) and Firebase (GitHub Pages / cross-device)
+          try {
+            fetch('/control', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ banner: 'hidden' }),
+            }).catch(function () {});
+          } catch (_) {}
+          if (window.fbControlUpdate) window.fbControlUpdate({ banner: 'hidden' });
+        }
+      };
+
+      /** Manually show the first banner (admin toggle) — no countdown, shows LIVE pill. */
+      window.showManualBanner = function () {
+        _isManual = true;
+        _stopClock();
+        _endTime = Date.now() + 5 * 60000; // 5-minute countdown
+        _manualStartTime = null;
+        var banner = _getBanner();
+        var en = document.getElementById('ab-en');
+        if (en) en.textContent = CONFIGS[0].message;
+        var timerEl = document.getElementById('ab-timer');
+        if (timerEl) timerEl.textContent = '5:00';
+        banner.classList.add('ab-manual', 'ab-visible');
+        _clockIv = setInterval(_tickClock, 1000);
+      };
+
+      /**
+       * Polling fallback — called every second by updateAutoAdvStatus.
+       * Ensures the banner appears even if the storage event was missed.
+       */
+      window.syncManualBanner = function () {
+        try {
+          var wanted = localStorage.getItem(MANUAL_KEY) === 'showing';
+          if (wanted && !_isManual) {
+            window.showManualBanner();
+          } else if (!wanted && _isManual) {
+            // Admin hid it — dismiss without writing to localStorage (already updated by admin)
+            _stopClock();
+            _endTime  = null;
+            _isManual = false;
+            var el = document.getElementById('alert-banner');
+            if (el) el.classList.remove('ab-visible', 'ab-manual');
+          }
+        } catch (e) {}
+      };
+
+      // React to admin toggling the manual banner from admin.html (instant response)
+      window.addEventListener('storage', function (ev) {
+        if (ev.key !== MANUAL_KEY) return;
+        if (ev.newValue === 'showing') {
+          window.showManualBanner();
+        } else if (_isManual) {
+          window.dismissAlertBanner();
+        }
+      });
+
+      // Restore manual banner state on page load (e.g. after refresh)
+      try {
+        if (localStorage.getItem(MANUAL_KEY) === 'showing') window.showManualBanner();
+      } catch (e) {}
+
+      /**
+       * Called every second from updateAutoAdvStatus.
+       * Shows the banner when remaining time for a configured item falls within its threshold.
+       */
+      window.checkAndShowAlert = function (data) {
+        if (!data || !data.autoAdvanceStartedAt ||
+            data.manualCurrentSequenceId == null ||
+            data.manualCurrentSequenceId === '') return;
+
+        var seqId = Number(data.manualCurrentSequenceId);
+        var config = null;
+        for (var ci = 0; ci < CONFIGS.length; ci++) {
+          if (CONFIGS[ci].seqId === seqId) { config = CONFIGS[ci]; break; }
+        }
+        if (!config) return;
+
+        var items = data.items || [];
+        var currentItem = null;
+        for (var ii = 0; ii < items.length; ii++) {
+          if (Number(items[ii].sequenceId) === seqId) { currentItem = items[ii]; break; }
+        }
+        if (!currentItem) return;
+
+        var durationMs = Math.max(0, Number(currentItem.durationMinutes) || 0) * 60000;
+        var elapsed    = Date.now() - data.autoAdvanceStartedAt;
+        var remaining  = durationMs - elapsed;
+        var key        = seqId + '_' + data.autoAdvanceStartedAt;
+
+        if (remaining > 0 && remaining <= config.alertBeforeMs && _shownKey !== key) {
+          _shownKey = key;
+          _stopClock();
+          _endTime = Date.now() + remaining;
+          var banner = _getBanner();
+          var en = document.getElementById('ab-en');
+          if (en) en.textContent = config.message;
+          // Populate timer pill immediately so it is never blank when banner appears
+          var timerInit = document.getElementById('ab-timer');
+          if (timerInit) {
+            var initSecs = Math.round(remaining / 1000);
+            timerInit.textContent = Math.floor(initSecs / 60) + ':' + _p2(initSecs % 60);
+          }
+          banner.classList.add('ab-visible');
+          _clockIv = setInterval(_tickClock, 1000);
+        }
+      };
+    })();
+    /* ─────────────────────────────────────────────────────────────────────── */
 
     function getData() {
       try {
@@ -1120,7 +1830,7 @@
       const currentIndex = view.currentIndex;
       const agendaPinned = view.agendaPinned;
       const descClass = (style) => style === 'large' ? ' description-large' : style === 'largeBold' ? ' description-largeBold' : '';
-      const artistKey = 'artist(s)';
+      const presenterKey = 'Presenter(s)';
       contentEl.innerHTML = `
         <ul class="event-list">
           ${ordered.map((item, i) => {
@@ -1128,8 +1838,8 @@
             const prep = item.prepTime != null && item.prepTime !== '' && Number(item.prepTime) !== 0
               ? `<div class="meta-line">Prep: ${escapeHtml(String(item.prepTime))} min</div>`
               : '';
-            const art = item[artistKey] && String(item[artistKey]).trim() !== ''
-              ? `<div class="meta-line meta-artist"><span class="meta-label">Artist(s):</span>${escapeHtml(String(item[artistKey]).trim())}</div>`
+            const art = item[presenterKey] && String(item[presenterKey]).trim() !== ''
+              ? `<div class="meta-line meta-presenter"><span class="meta-label">Presenter(s):</span>${escapeHtml(String(item[presenterKey]).trim())}</div>`
               : '';
             const seqIdRaw = item.sequenceId != null && item.sequenceId !== '' ? String(item.sequenceId) : '';
             const seq = seqIdRaw || '—';
@@ -1165,6 +1875,7 @@
                 ${prep}
                 ${gap}
                 ${art}
+                <div class="auto-adv-status" data-adv-id="${escapeHtml(seqIdRaw)}"></div>
               </div>
               ${sideThumb}
               <div class="time-block">
@@ -1227,6 +1938,8 @@
               const k = String(prior.manualCurrentSequenceId);
               if (parsed.items.some(function (it) { return String(it.sequenceId) === k; })) {
                 parsed.manualCurrentSequenceId = prior.manualCurrentSequenceId;
+                // Preserve timer start so auto-advance continues across page reloads
+                if (prior.autoAdvanceStartedAt) parsed.autoAdvanceStartedAt = prior.autoAdvanceStartedAt;
               }
             }
             saveData(parsed);
@@ -1238,13 +1951,88 @@
         data = getData();
       }
       renderProgramme(data, true);
+      scheduleAutoAdvance(data);
       setInterval(refresh, 15000);
+      setInterval(updateAutoAdvStatus, 1000);
+      // Start ambient animation after the initial burst fades (~16 s), then keep in sync
+      setTimeout(function () {
+        if (window.updateAmbientAnimation) {
+          window.updateAmbientAnimation(getData());
+          setInterval(function () {
+            if (window.updateAmbientAnimation) window.updateAmbientAnimation(getData());
+          }, 3000);
+        }
+      }, 16000);
       window.addEventListener('storage', function () {
-        renderProgramme(getData(), true);
+        const newData = getData();
+        renderProgramme(newData, true);
+        scheduleAutoAdvance(newData);
+        if (window.updateAmbientAnimation) window.updateAmbientAnimation(newData);
       });
     }
 
     init();
+  </script>
+
+  <!-- Firebase Realtime Database — cross-device sync (works on GitHub Pages) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+  (function initFirebaseDisplay() {
+    if (typeof FIREBASE_CONFIG === 'undefined' || !FIREBASE_CONFIG ||
+        !FIREBASE_CONFIG.databaseURL || FIREBASE_CONFIG.apiKey === 'YOUR_API_KEY') return;
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      var db = firebase.database();
+
+      // Expose so dismissAlertBanner and other code can write back to Firebase
+      window.fbControlUpdate = function (obj) {
+        try { db.ref('control').update(obj); } catch (_) {}
+      };
+
+      // Track last-seen focus to avoid re-applying identical state
+      var _lastFocusKey = '';
+
+      // Listen for all control state changes from any device
+      db.ref('control').on('value', function (snap) {
+        var state = snap.val();
+        if (!state) return;
+
+        // ── Focus override (admin set a different "In Progress" item) ──────
+        if ('focus' in state) {
+          if (state.focus !== null && state.focus !== undefined) {
+            var key = state.focus.seqId + '_' + state.focus.startedAt;
+            if (key !== _lastFocusKey) {
+              _lastFocusKey = key;
+              if (window.applyFocusOverride) {
+                window.applyFocusOverride(state.focus.seqId, state.focus.startedAt);
+              }
+            }
+          } else {
+            if (_lastFocusKey !== 'cleared') {
+              _lastFocusKey = 'cleared';
+              if (window.clearFocusOverride) window.clearFocusOverride();
+            }
+          }
+        }
+
+        // ── Music ──────────────────────────────────────────────────────────
+        if (state.music !== undefined) {
+          try { localStorage.setItem('dholMusicState', state.music); } catch (_) {}
+          if (window.syncDholAudio) window.syncDholAudio();
+        }
+
+        // ── Banner ─────────────────────────────────────────────────────────
+        if (state.banner !== undefined) {
+          try { localStorage.setItem('manualBannerState', state.banner); } catch (_) {}
+          if (window.syncManualBanner) window.syncManualBanner();
+        }
+      });
+    } catch (e) {
+      // Firebase unavailable — SSE + localStorage handle it
+    }
+  })();
   </script>
 </body>
 </html>

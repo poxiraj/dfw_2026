@@ -4,6 +4,10 @@
   "description": "Rongali Bihu programme viewer (static + localStorage admin)",
   "scripts": {
     "prestart": "npx --yes kill-port 5173",
-    "start": "npx --yes serve . -p 5173"
+    "start": "node server.js",
+    "generate": "node generate-events.js"
+  },
+  "devDependencies": {
+    "xlsx": "^0.18.5"
   }
 }

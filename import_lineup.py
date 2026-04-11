@@ -48,9 +48,19 @@ def resolve_xlsx_path():
 
 def normalize_item(obj):
     """Map spreadsheet column names to the JSON schema the app expects."""
-    for bad in ("perfomers/speakers", "peformers/speakers", "performers/speakers"):
-        if bad in obj:
-            obj["artist(s)"] = obj.pop(bad)
+    # Column G in Lineup 2026.xlsx (header often "perfomers/speakers"; output key Presenter(s))
+    presenter_sources = (
+        "perfomers/speakers",
+        "perfomers_speakers",
+        "peformers/speakers",
+        "peformers_speakers",
+        "performers/speakers",
+        "performers_speakers",
+        "artist(s)",
+    )
+    for src in presenter_sources:
+        if src in obj:
+            obj["Presenter(s)"] = obj.pop(src)
             break
     if "Coordinator" in obj:
         obj["coordinator"] = obj.pop("Coordinator")
@@ -72,6 +82,16 @@ def main():
         s = str(h).strip()
         if s == "descrption1":
             s = "description1"
+        if s in (
+            "perfomers/speakers",
+            "perfomers_speakers",
+            "peformers/speakers",
+            "peformers_speakers",
+            "performers/speakers",
+            "performers_speakers",
+            "artist(s)",
+        ):
+            s = "Presenter(s)"
         if s.lower().startswith("overlap"):
             break
         headers.append(s)

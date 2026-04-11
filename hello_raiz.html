@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Hello Raiz — Event Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #f5f0e6;
+      --parchment: #e8dfd0;
+      --sepia: #c4a77d;
+      --gold: #b8860b;
+      --burgundy: #722f37;
+      --deep-burgundy: #4a1c22;
+      --ink: #2c1810;
+      --text-blue: #0d3b66;
+      --text-blue-soft: #1565a8;
+      --text-blue-deep: #082f52;
+      --border-gold: rgba(184, 134, 11, 0.5);
+      --item-border-gold: #c9a227;
+      --shadow-warm: rgba(114, 47, 55, 0.15);
+      --backdrop: url("mainBackDrop.png");
+    }
+    @media (pointer: coarse) {
+      :root { --backdrop: url("mainBackdropMobile.png"); }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      color: var(--text-blue);
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-color: #2c1810;
+      background-image:
+        linear-gradient(rgba(245, 240, 230, 0.22) 0%, rgba(232, 223, 208, 0.18) 45%, transparent 75%),
+        var(--backdrop);
+      background-size: 100% 100%, 100% auto;
+      background-position: center, center top;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed, fixed;
+    }
+    @media (max-width: 900px) {
+      body { background-attachment: scroll, scroll; }
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: max(2rem, env(safe-area-inset-top))
+               max(1.5rem, env(safe-area-inset-right))
+               max(3rem, env(safe-area-inset-bottom))
+               max(1.5rem, env(safe-area-inset-left));
+    }
+
+    /* ── Header ──────────────────────────────────────────────────────────── */
+    header {
+      text-align: center;
+      padding: 2rem 1.5rem 1.75rem;
+      margin-bottom: 2rem;
+      border: 2px solid var(--item-border-gold);
+      background: linear-gradient(135deg, var(--parchment) 0%, rgba(232, 223, 208, 0.92) 100%);
+      box-shadow: 0 4px 24px var(--shadow-warm);
+      position: relative;
+    }
+
+    .header-ornament {
+      display: block;
+      font-size: 1.4rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+      opacity: 0.8;
+    }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 5vw, 2.1rem);
+      color: var(--text-blue-deep);
+      letter-spacing: 0.1em;
+      line-height: 1.2;
+    }
+
+    header .subtitle {
+      margin-top: 0.55rem;
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-blue-soft);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.9rem auto 0;
+      max-width: 260px;
+    }
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--item-border-gold);
+    }
+    .divider-diamond {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* ── Accordion ───────────────────────────────────────────────────────── */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .accordion-item {
+      border: 2px solid var(--item-border-gold);
+      box-shadow: 0 3px 16px var(--shadow-warm);
+      overflow: hidden;
+    }
+
+    /* Trigger button */
+    .accordion-trigger {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.1rem 1.4rem;
+      background: linear-gradient(135deg, var(--parchment) 0%, rgba(232, 223, 208, 0.95) 100%);
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .accordion-trigger:hover {
+      background: linear-gradient(135deg, #f0e8d8 0%, var(--parchment) 100%);
+    }
+    .accordion-trigger:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: -2px;
+    }
+
+    .trigger-icon {
+      flex-shrink: 0;
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .trigger-label {
+      flex: 1 1 auto;
+      font-family: 'Cinzel', serif;
+      font-weight: 600;
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      letter-spacing: 0.07em;
+      color: var(--text-blue-deep);
+    }
+
+    .trigger-chevron {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .trigger-chevron::before,
+    .trigger-chevron::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 9px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 1px;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .trigger-chevron::before { left: 1px;  transform: translateY(-50%) rotate(45deg); }
+    .trigger-chevron::after  { right: 1px; transform: translateY(-50%) rotate(-45deg); }
+
+    /* Open state */
+    .accordion-item.is-open > .accordion-trigger {
+      background: linear-gradient(135deg, var(--burgundy) 0%, var(--deep-burgundy) 100%);
+    }
+    .accordion-item.is-open > .accordion-trigger .trigger-label {
+      color: var(--cream);
+    }
+    .accordion-item.is-open > .accordion-trigger .trigger-chevron::before {
+      transform: translateY(-50%) rotate(-45deg);
+    }
+    .accordion-item.is-open > .accordion-trigger .trigger-chevron::after {
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .accordion-item.is-open > .accordion-trigger .trigger-chevron::before,
+    .accordion-item.is-open > .accordion-trigger .trigger-chevron::after {
+      background: var(--cream);
+    }
+
+    /* Panel */
+    .accordion-panel {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .accordion-item.is-open > .accordion-panel {
+      grid-template-rows: 1fr;
+    }
+    .accordion-panel-inner {
+      overflow: hidden;
+    }
+    .accordion-panel-content {
+      padding: 1.5rem 1.4rem;
+      background: linear-gradient(180deg, #fffef9 0%, var(--parchment) 100%);
+      border-top: 1px solid var(--border-gold);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-blue);
+    }
+
+    /* Placeholder text inside panels */
+    .panel-placeholder {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1rem;
+      border: 1px dashed var(--item-border-gold);
+      background: rgba(184, 134, 11, 0.06);
+      color: var(--text-blue-soft);
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+    .panel-placeholder::before {
+      content: '✦';
+      color: var(--gold);
+      font-style: normal;
+      flex-shrink: 0;
+    }
+
+    /* ── Venue iframe ────────────────────────────────────────────────────── */
+    .venue-frame-wrap {
+      position: relative;
+      width: 100%;
+      height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .venue-frame-wrap iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 100%;
+      border: none;
+    }
+    .venue-fallback {
+      display: none; /* shown via JS if iframe fails to load */
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #fffef9 0%, var(--parchment) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-blue-soft);
+      font-size: 0.95rem;
+    }
+    .venue-fallback a {
+      display: inline-block;
+      margin-top: 0.25rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 0.55rem 1.4rem;
+      background: linear-gradient(135deg, var(--burgundy) 0%, var(--deep-burgundy) 100%);
+      color: var(--cream);
+      text-decoration: none;
+      border: 1px solid var(--item-border-gold);
+    }
+    .venue-fallback a:hover { opacity: 0.87; }
+    .accordion-panel-content.no-pad { padding: 0; }
+    @media (max-width: 520px) {
+      .venue-frame-wrap { height: 50vh; }
+    }
+
+    /* ── Menu gallery ───────────────────────────────────────────────────── */
+    .menu-gallery {
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: #1a1008;
+    }
+    .menu-gallery img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .menu-gallery + .menu-gallery { border-top: 1px solid var(--border-gold); }
+
+    /* ── Schedule ────────────────────────────────────────────────────────── */
+    .schedule-date {
+      text-align: center;
+      padding: 0.9rem 1rem 0.6rem;
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--text-blue-deep);
+      border-bottom: 1px solid var(--border-gold);
+      background: linear-gradient(135deg, #fffef9 0%, var(--parchment) 100%);
+    }
+    .schedule-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .schedule-row {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr;
+      gap: 0 0.75rem;
+      align-items: baseline;
+      padding: 0.65rem 1.1rem;
+      border-bottom: 1px solid rgba(184, 134, 11, 0.18);
+    }
+    .schedule-row:last-child { border-bottom: none; }
+    .schedule-row.is-break {
+      background: rgba(114, 47, 55, 0.06);
+    }
+    .schedule-time {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--burgundy);
+      white-space: nowrap;
+      padding-top: 0.1rem;
+    }
+    .schedule-desc {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .schedule-assamese {
+      font-size: 1rem;
+      color: var(--text-blue-deep);
+      line-height: 1.35;
+    }
+    .schedule-english {
+      font-size: 0.85rem;
+      color: var(--text-blue-soft);
+      font-style: italic;
+      line-height: 1.3;
+    }
+
+    /* ── Bulletin image panel (decor / arts) ────────────────────────────── */
+    .bulletin-img-wrap {
+      background: #1a1008;
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .bulletin-img-wrap img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+    .bulletin-disclaimer {
+      padding: 0.55rem 1.1rem;
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--text-blue-soft);
+      background: linear-gradient(135deg, #fffef9 0%, var(--parchment) 100%);
+      border-top: 1px solid var(--border-gold);
+      text-align: center;
+    }
+
+    /* ── Footer link ─────────────────────────────────────────────────────── */
+    .back-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .back-link {
+      display: inline-block;
+      font-size: 0.9rem;
+      color: var(--cream);
+      text-decoration: none;
+      opacity: 0.75;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover { opacity: 1; text-decoration: underline; }
+
+    @media (max-width: 520px) {
+      .accordion-trigger { padding: 1rem 1rem; }
+      .accordion-panel-content { padding: 1.25rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <header>
+      <span class="header-ornament">✦ &nbsp; ✦ &nbsp; ✦</span>
+      <h1>Hello, Raiz!</h1>
+      <p class="subtitle">Everything you need to know, in one place</p>
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+      </div>
+    </header>
+
+    <div class="accordion" id="accordion">
+
+      <!-- 1 · The Venue -->
+      <div class="accordion-item" id="section-venue">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-venue">
+          <span class="trigger-icon" aria-hidden="true">📍</span>
+          <span class="trigger-label">The Venue</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-venue" role="region" aria-labelledby="section-venue">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content no-pad">
+              <p style="padding:0.7rem 1.1rem;font-family:'Cinzel',serif;font-size:0.9rem;letter-spacing:0.05em;color:var(--text-blue-deep);background:linear-gradient(135deg,#fffef9 0%,var(--parchment) 100%);border-bottom:1px solid var(--border-gold);">📍 300 Chisholm Pl, Plano, TX 75075</p>
+              <div class="venue-frame-wrap">
+                <iframe id="venue-iframe"
+                        src="https://thegranddhaba.com/"
+                        title="Grand Dhaba — The Venue"
+                        loading="lazy"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+                <div class="venue-fallback" id="venue-fallback" style="display:none">
+                  <p>This site cannot be displayed in an embedded view.</p>
+                  <a href="https://thegranddhaba.com/" target="_blank" rel="noopener">
+                    Open Grand Dhaba website ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 · The Menu -->
+      <div class="accordion-item" id="section-menu">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-menu">
+          <span class="trigger-icon" aria-hidden="true">🍽️</span>
+          <span class="trigger-label">The Menu</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-menu" role="region" aria-labelledby="section-menu">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content no-pad">
+              <div class="bulletin-img-wrap">
+                <img src="bulletin/menu/meal_menu.png" alt="Dinner — representative image" loading="lazy" />
+              </div>
+              <p class="bulletin-disclaimer">✦ This is just a representative image of our elaborate gourmet dinner, snacks and drinks. The actual list of menu items will be shown here by April 14.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 · The Schedule -->
+      <div class="accordion-item" id="section-schedule">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-schedule">
+          <span class="trigger-icon" aria-hidden="true">🗓️</span>
+          <span class="trigger-label">The Schedule</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-schedule" role="region" aria-labelledby="section-schedule">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content">
+              <div class="schedule-date">Saturday, April 18, 2026</div>
+              <ul class="schedule-list">
+                <li class="schedule-row">
+                  <span class="schedule-time">3:00 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-assamese">জলপান , আলোকচিত্ৰ</span>
+                    <span class="schedule-english">Snacks, Photo</span>
+                  </div>
+                </li>
+                <li class="schedule-row">
+                  <span class="schedule-time">4:00 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-assamese">উদ্বোধনী</span>
+                    <span class="schedule-english">Welcome Address</span>
+                  </div>
+                </li>
+                <li class="schedule-row">
+                  <span class="schedule-time">4:03 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-english">Programs Begin</span>
+                    <span class="schedule-english" style="font-style:normal;color:var(--burgundy);font-size:0.78rem;">✦ Detail items in the program will be published by Wednesday.</span>
+                  </div>
+                </li>
+                <li class="schedule-row is-break">
+                  <span class="schedule-time">5:54 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-assamese">চাহ-পানীৰ অৱকাশ</span>
+                    <span class="schedule-english">Break — Water / Tea</span>
+                  </div>
+                </li>
+                <li class="schedule-row">
+                  <span class="schedule-time">6:26 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-english">Programs Resume</span>
+                    <span class="schedule-english" style="font-style:normal;color:var(--burgundy);font-size:0.78rem;">✦ Detail items in the program will be published by Wednesday.</span>
+                  </div>
+                </li>
+                <li class="schedule-row">
+                  <span class="schedule-time">9:10 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-assamese">নিশাৰ আহাৰ</span>
+                    <span class="schedule-english">Dinner</span>
+                  </div>
+                </li>
+                <li class="schedule-row">
+                  <span class="schedule-time">10:10 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-assamese">মুকলি বিহু</span>
+                    <span class="schedule-english">Mukoli Bihu</span>
+                  </div>
+                </li>
+                <li class="schedule-row">
+                  <span class="schedule-time">11:00 PM</span>
+                  <div class="schedule-desc">
+                    <span class="schedule-assamese">অনুষ্ঠান সামৰণি</span>
+                    <span class="schedule-english">Closing</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 · Decor -->
+      <div class="accordion-item" id="section-decor">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-decor">
+          <span class="trigger-icon" aria-hidden="true">🌸</span>
+          <span class="trigger-label">Decor</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-decor" role="region" aria-labelledby="section-decor">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content no-pad">
+              <div class="bulletin-img-wrap">
+                <img src="bulletin/decor/photo_booth.jpeg"
+                     alt="Decor — Photo Booth"
+                     loading="lazy" />
+              </div>
+              <p class="bulletin-disclaimer">✦ This is a representative image. The real image will be updated when ready.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 · Arts -->
+      <div class="accordion-item" id="section-arts">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-arts">
+          <span class="trigger-icon" aria-hidden="true">🎨</span>
+          <span class="trigger-label">Arts</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-arts" role="region" aria-labelledby="section-arts">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content no-pad">
+              <div class="bulletin-img-wrap">
+                <img src="bulletin/arts/arts_comp.png"
+                     alt="Arts — Competition"
+                     loading="lazy" />
+              </div>
+              <p class="bulletin-disclaimer">✦ This is a representative image. The real image will be updated when ready.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /accordion -->
+
+    <!-- back link disabled -->
+    <div class="back-row" hidden></div>
+
+  </div>
+
+  <script>
+    /* ── Iframe load-error detection ─────────────────────────────────────── */
+    (function () {
+      var iframe   = document.getElementById('venue-iframe');
+      var fallback = document.getElementById('venue-fallback');
+      if (!iframe || !fallback) return;
+
+      // If the iframe load errors (e.g. X-Frame-Options denial), show fallback
+      iframe.addEventListener('error', function () {
+        iframe.style.display = 'none';
+        fallback.style.display = 'flex';
+      });
+
+      // Secondary check: some sites load silently but render a blank white page.
+      // We can't read cross-origin content, so just ensure the fallback link
+      // is always accessible by keeping it in the DOM (hidden by default).
+    })();
+
+    /* ── Background music ────────────────────────────────────────────────── */
+    var _bgAudio = (function () {
+      var audio = new Audio('bulletin/music/backmusic.mp3');
+      audio.loop = true;
+      audio.volume = 0.55;
+      return audio;
+    })();
+
+    function _playBgMusic() {
+      if (_bgAudio.paused) {
+        _bgAudio.play().catch(function () {
+          // Browser blocked autoplay — will retry on next user gesture
+        });
+      }
+    }
+
+    (function () {
+      var items = document.querySelectorAll('.accordion-item');
+
+      items.forEach(function (item) {
+        var trigger = item.querySelector('.accordion-trigger');
+
+        trigger.addEventListener('click', function () {
+          var isOpen = item.classList.contains('is-open');
+
+          // Play background music on first interaction (no restart if already playing)
+          _playBgMusic();
+
+          // Close all others
+          items.forEach(function (other) {
+            if (other !== item && other.classList.contains('is-open')) {
+              other.classList.remove('is-open');
+              other.querySelector('.accordion-trigger').setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          // Toggle this one
+          item.classList.toggle('is-open', !isOpen);
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+
+          // Scroll the item into view smoothly after the animation starts
+          if (!isOpen) {
+            setTimeout(function () {
+              item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 50);
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
