@@ -388,6 +388,46 @@
       text-align: center;
     }
 
+    /* ── Important info panel — news from bulletin/news/news.txt ─────────── */
+    .staging-news {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .staging-news-preamble {
+      padding-bottom: 0.25rem;
+      border-bottom: 1px dashed rgba(184, 134, 11, 0.35);
+    }
+    .staging-news-preamble p {
+      margin: 0 0 0.65rem;
+    }
+    .staging-news-preamble p:last-child { margin-bottom: 0; }
+
+    .staging-news-block {
+      margin: 0;
+      padding: 0;
+    }
+    .staging-news-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--text-blue-deep);
+      margin: 0 0 0.5rem;
+      line-height: 1.35;
+    }
+    .staging-news-body {
+      margin: 0;
+      padding-left: 0.35rem;
+      border-left: 3px solid rgba(184, 134, 11, 0.45);
+    }
+    .staging-news-body p {
+      margin: 0 0 0.55rem;
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+    .staging-news-body p:last-child { margin-bottom: 0; }
+
     /* ── Footer link ─────────────────────────────────────────────────────── */
     .back-row {
       text-align: center;
@@ -563,6 +603,25 @@
         </div>
       </div>
 
+      <!-- Important Info · news from bulletin/news/news.txt -->
+      <div class="accordion-item" id="section-staging">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-staging">
+          <span class="trigger-icon" aria-hidden="true">🔔</span>
+          <span class="trigger-label">Important Info</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-staging" role="region" aria-labelledby="section-staging">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content" id="staging-news-root">
+              <p class="panel-placeholder" id="staging-news-status">Loading news…</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 4 · Decor -->
       <div class="accordion-item" id="section-decor">
         <button class="accordion-trigger"
@@ -651,6 +710,100 @@
         });
       }
     }
+
+    /* ── Important info: fetch & parse bulletin/news/news.txt ───────────── */
+    (function loadStagingNews() {
+      var root = document.getElementById('staging-news-root');
+      if (!root) return;
+
+      function escapeHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      function isOrdinalHeader(line) {
+        var t = line.trim();
+        if (!t) return false;
+        if (/^\d+\s*[\.\)]\s*\S/.test(t)) return true;
+        if (/^\d+(st|nd|rd|th)\b/i.test(t) && /\s/.test(t)) return true;
+        return false;
+      }
+
+      function headerTitle(line) {
+        var t = line.trim();
+        var m = t.match(/^\d+\s*[\.\)]\s*(.*)$/);
+        if (m) return (m[1] || '').trim() || t;
+        m = t.match(/^\d+(st|nd|rd|th)\b[,.\s]*\s*(.*)$/i);
+        if (m) return (m[2] || '').trim() || t;
+        return t;
+      }
+
+      function parseStagingNews(raw) {
+        var lines = String(raw).replace(/\r\n/g, '\n').split('\n');
+        var preamble = [];
+        var sections = [];
+        var cur = null;
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          if (isOrdinalHeader(line)) {
+            if (cur) sections.push(cur);
+            cur = { title: headerTitle(line), lines: [] };
+          } else {
+            var trimmed = line.trim();
+            if (cur) {
+              if (trimmed) cur.lines.push(trimmed);
+            } else if (trimmed) {
+              preamble.push(trimmed);
+            }
+          }
+        }
+        if (cur) sections.push(cur);
+        return { preamble: preamble, sections: sections };
+      }
+
+      function renderStagingNews(data) {
+        var html = '';
+        if (data.preamble.length) {
+          html += '<div class="staging-news-preamble">';
+          data.preamble.forEach(function (line) {
+            html += '<p>' + escapeHtml(line) + '</p>';
+          });
+          html += '</div>';
+        }
+        data.sections.forEach(function (sec) {
+          html += '<article class="staging-news-block">';
+          html += '<h3 class="staging-news-title">' + escapeHtml(sec.title) + '</h3>';
+          html += '<div class="staging-news-body">';
+          if (sec.lines.length === 0) {
+            html += '<p style="font-style:italic;color:var(--text-blue-soft);">(No details yet.)</p>';
+          } else {
+            sec.lines.forEach(function (ln) {
+              html += '<p>' + escapeHtml(ln) + '</p>';
+            });
+          }
+          html += '</div></article>';
+        });
+        if (!html) {
+          html = '<p class="panel-placeholder">No news text in bulletin/news/news.txt yet.</p>';
+        }
+        return '<div class="staging-news">' + html + '</div>';
+      }
+
+      fetch('bulletin/news/news.txt', { cache: 'no-store' })
+        .then(function (res) {
+          if (!res.ok) throw new Error(String(res.status));
+          return res.text();
+        })
+        .then(function (text) {
+          var data = parseStagingNews(text);
+          root.innerHTML = renderStagingNews(data);
+        })
+        .catch(function () {
+          root.innerHTML =
+            '<p class="panel-placeholder">Could not load bulletin/news/news.txt. Serve this folder over HTTP and ensure the file exists.</p>';
+        });
+    })();
 
     (function () {
       var items = document.querySelectorAll('.accordion-item');
