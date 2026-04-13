@@ -9,6 +9,7 @@ BASE = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(BASE, "events.json")
 
 XLSX_CANDIDATES = [
+    os.path.join(BASE, "Lineup2026.xlsx"),
     os.path.join(BASE, "Lineup_2026.xlsx"),
     os.path.join(BASE, "Lineup 2026.xlsx"),
 ]
@@ -118,9 +119,8 @@ def main():
 
         d1 = cell("description1")
         d2 = cell("description2")
-        if isinstance(d1, str) and "total time" in d1.lower():
-            break
-        if isinstance(d2, str) and "total time" in d2.lower():
+        all_text = " ".join(str(v) for v in cells if v is not None).lower()
+        if "total time" in all_text:
             break
 
         obj = {}
