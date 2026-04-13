@@ -365,6 +365,41 @@
       line-height: 1.3;
     }
 
+    /* ── Menu 2×2 grid ───────────────────────────────────────────────────── */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+      background: #1a1008;
+      padding: 3px;
+      max-height: 50vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .menu-grid-item {
+      background: #1a1008;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .menu-grid-item img {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      flex: 1;
+    }
+    .menu-grid-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-blue-soft);
+      text-align: center;
+      padding: 0.3rem 0.4rem;
+      background: linear-gradient(135deg, #fffef9 0%, var(--parchment) 100%);
+    }
+
     /* ── Bulletin image panel (decor / arts) ────────────────────────────── */
     .bulletin-img-wrap {
       background: #1a1008;
@@ -465,6 +500,29 @@
 
     <div class="accordion" id="accordion">
 
+      <!-- 0 · Full Agenda -->
+      <div class="accordion-item" id="section-agenda">
+        <button class="accordion-trigger"
+                type="button"
+                aria-expanded="false"
+                aria-controls="panel-agenda">
+          <span class="trigger-icon" aria-hidden="true">🎭</span>
+          <span class="trigger-label">Full Agenda</span>
+          <span class="trigger-chevron" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-panel" id="panel-agenda" role="region" aria-labelledby="section-agenda">
+          <div class="accordion-panel-inner">
+            <div class="accordion-panel-content" style="text-align:center;padding:1.75rem 1.4rem;">
+              <p style="font-size:1rem;color:var(--text-blue-soft);margin-bottom:1.1rem;">View the full live programme with all acts, timings, and performers.</p>
+              <a href="index.html"
+                 style="display:inline-flex;align-items:center;gap:0.5rem;font-family:'Cinzel',serif;font-size:0.88rem;font-weight:600;letter-spacing:0.07em;padding:0.7rem 1.6rem;background:linear-gradient(135deg,var(--burgundy) 0%,var(--deep-burgundy) 100%);color:var(--cream);text-decoration:none;border:1px solid var(--item-border-gold);box-shadow:0 2px 10px var(--shadow-warm);">
+                📋 Open Full Programme ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 1 · The Venue -->
       <div class="accordion-item" id="section-venue">
         <button class="accordion-trigger"
@@ -511,10 +569,32 @@
         <div class="accordion-panel" id="panel-menu" role="region" aria-labelledby="section-menu">
           <div class="accordion-panel-inner">
             <div class="accordion-panel-content no-pad">
-              <div class="bulletin-img-wrap">
-                <img src="bulletin/menu/meal_menu.png" alt="Dinner — representative image" loading="lazy" />
+              <div class="menu-grid">
+                <div class="menu-grid-item">
+                  <figure style="margin:0;width:100%">
+                    <img src="bulletin/menu/beverages.png" alt="Beverages" loading="lazy" />
+                    <figcaption class="menu-grid-label">Beverages</figcaption>
+                  </figure>
+                </div>
+                <div class="menu-grid-item">
+                  <figure style="margin:0;width:100%">
+                    <img src="bulletin/menu/snacks_menu.png" alt="Snacks" loading="lazy" />
+                    <figcaption class="menu-grid-label">Snacks</figcaption>
+                  </figure>
+                </div>
+                <div class="menu-grid-item">
+                  <figure style="margin:0;width:100%">
+                    <img src="bulletin/menu/dinner_menu.png" alt="Dinner" loading="lazy" />
+                    <figcaption class="menu-grid-label">Dinner</figcaption>
+                  </figure>
+                </div>
+                <div class="menu-grid-item">
+                  <figure style="margin:0;width:100%">
+                    <img src="bulletin/menu/dessert_menu.png" alt="Dessert" loading="lazy" />
+                    <figcaption class="menu-grid-label">Dessert</figcaption>
+                  </figure>
+                </div>
               </div>
-              <p class="bulletin-disclaimer">✦ This is just a representative image of our elaborate gourmet dinner, snacks and drinks. The actual list of menu items will be shown here by April 14.</p>
             </div>
           </div>
         </div>
